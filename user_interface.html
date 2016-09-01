@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+ 
+  <body>
+
+  <!-- this will be on the main page -->
+  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="1000" height="400"></iframe>
+
+  <!-- <iframe src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:63MgFVcIldlw51imFtcgK1,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe,2CY92qejUrhyPUASawNVRr,2CY92qejUrhyPUASawNVRr, 1x6ACsKV4UdWS2FMuPFUiTm, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW" frameborder="0" allowtransparency="true" width="1000"></iframe> -->
+
+
+  <!-- this will be on the main page -->
+
+
+
+  <!-- this will be the guest user page -->
+  <div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <div class="btn-group" role="group">
+      <button type="button" onclick="searchForTracks()" class="btn btn-default">Search</button>
+    </div>
+    <div class="btn-group" role="group">
+      <button type="button" onclick="getPlaylist()" class="btn btn-default">UpVote/DownVote</button>
+    </div>
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default">Exit</button>
+    </div>
+  </div>
+
+  <div id="autocomplete" class="center-block" style="margin-top: 20px; margin-bottom: 20px;">
+    <input id="search" placeholder="Search for Tracks" class="center-block"></input>
+  </div>
+
+  <table id="tableResults" class="table table-striped col-md-12">
+    <thead>
+      <tr>
+        <th class="text-center">Track Name</th>
+        <th class="text-center">Artist</th>
+        <th class="text-center">Preview</th>
+        <th class="text-center"></th>  
+      </tr>
+    </thead>
+    <tbody id="searchResults">
+    </tbody>
+  </table>
+
+  <script>
+    $(document).ready(function() {
+      
+
+      
+
+      // $("#spotifyPlayer").attr("src", src);
+
+      $("#tableResults, #search").hide();
+      
+      addTrack = function(track){
+        var tracks = { one:"1x6ACsKV4UdWS2FMuPFUiTm", two:"5Z7ygHQo02SUrFmcgpwsKW", three:"5Z7ygHQo02SUrFmcgpwsKW", four:"2CY92qejUrhyPUASawNVRr", five:"2CY92qejUrhyPUASawNVRr" }
+        
+        tracks.five = track;
+
+
+        var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${tracks.one},${tracks.two},${tracks.three},${tracks.four},${tracks.five}`;
+        
+        $("#spotifyPlayer").attr("src", src);
+        
+      }
+
+      displayResult = function(track) {
+        var artists = [];
+
+        track.artists.forEach(function(artist){
+          artists.push(artist.name);
+        })
+
+        var artist = artists.join(' / ');
+
+        var addToPlaylist = `<button onclick="addTrack('${track.id}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
+        var row = `<tr id="${track.id}">
+                    <td class="text-center">${track.name}</td>
+                    <td class="text-center">${artist}</<td>
+                    <td class="text-center">
+                      <audio controls>
+                        <source src="${track.preview_url}" type="audio/ogg">
+                        <source src="${track.preview_url}" type="audio/mpeg">
+                      </audio>
+                    <td class="text-center">${addToPlaylist}</td>
+                   </tr>`;
+        $('tbody').append(row);
+      }
+
+      searchForTracks = function(){
+
+        $("#tableResults, #search").show();
+
+        $("#search").on("keyup", function(e) {
+
+          var query = $("#search").val();
+          var searchTrack = query.split(' ').join('+');
+
+          if(query.length > 0) {
+
+            $.ajax({
+              url: `https://api.spotify.com/v1/search?q=${searchTrack}&type=track&market=CA&limit=5&offset=0`,
+              method: 'GET',
+              success: function(response) {     
+
+                $("#searchResults").empty();
+                $("#tableResults").show();
+                response.tracks.items.forEach(function(track){
+                  displayResult(track);
+                })
+
+              },
+              error: function(error) {
+                console.log(error); 
+              }
+            }); 
+          }
+        });
+
+      }
+
+      getPlaylist = function(){
+        $("#tableResults, #search").hide();
+
+        // get the playlist from the main app 
+        console.log("Gets the playlist")       
+
+      }
+
+
+
+      
+
+
+      
+      
+
+      
+    
+
+
+
+
+
+
+
+
+
+    });
+
+  </script>
+
+  </body>
+</html>
+
+
