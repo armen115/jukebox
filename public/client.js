@@ -11,10 +11,15 @@ $(document).ready(function() {
       }
       
       addTrackToPlaylist = function(track_id, track_name, artist){
+        // $(this).prop('disabled', true);
         getTrackDuration(track_id);
 
-        var $li = `<li>${track_name} : ${artist}</li>`
-        $('#queue').append($li);
+        var playlistRow = `<tr id="${track_id}">
+                            <td class="text-center">${track_name}</td>
+                            <td class="text-center">${artist}</<td>
+                            <td class="text-center">
+                          </tr>`;
+        $('#playlist').append(playlistRow);
 
         // var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${current_track}`;
         
@@ -32,7 +37,7 @@ $(document).ready(function() {
         var artist = artists.join(' / ');
 
         var addToPlaylist = `<button onclick="addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
-        var row = `<tr id="${track.id}">
+        var resultRow = `<tr id="${track.id}">
                     <td class="text-center">${track.name}</td>
                     <td class="text-center">${artist}</<td>
                     <td class="text-center">
@@ -42,12 +47,13 @@ $(document).ready(function() {
                       </audio>
                     <td class="text-center">${addToPlaylist}</td>
                    </tr>`;
-        $('tbody').append(row);
+        $('#searchResults').append(resultRow);
       }
 
       searchForTracks = function(){
 
         $("#tableResults, #search").show();
+        $("#tablePlaylist").hide();
 
         $("#search").on("keyup", function(e) {
 
@@ -77,9 +83,9 @@ $(document).ready(function() {
 
       }
 
-      getPlaylist = function(){
+      vote = function(){
         $("#tableResults, #search").hide();
-
+        $("#tablePlaylist").show();
         // get the playlist from the main app 
         console.log("Gets the playlist")       
 
@@ -102,7 +108,7 @@ $(document).ready(function() {
 
       playDefault();
 
-      $("#tableResults, #search").hide();
+      $("#tableResults, #search, #tablePlaylist").hide();
 
 
     });
