@@ -98,8 +98,12 @@
       addTrackToPlaylist = function(track_id, track_name, artist){
         getTrackDuration(track_id);
 
-        var $li = `<li>${track_name} : ${artist}</li>`
-        $('#queue').append($li);
+        var tr = `<tr>
+                  <td>${track_name}</td>
+                  <td>${artist}</td>
+                  </tr>`
+        $('#playlist_table tbody').append(tr);
+
 
         // var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${current_track}`;
         
@@ -204,9 +208,11 @@
       $('#message').val('');
       return false;
     })
-    socket.on('chat message', function(message){
-      $('#chat_area').append('<li>' + message);
-    })
+    
+    $('')
+
+    socket.on('add track')
+    
     socket.on('name submit', function(name){
       $('#users').append(name + '');
     })

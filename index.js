@@ -14,6 +14,7 @@ app.get('/', function(req, res){
 });
 
 app.get('/admin', function(req, res){
+	
 	res.sendFile(__dirname + '/public/main.html')
 })
 
@@ -29,9 +30,8 @@ io.on('connection', function(socket){
 		io.emit('name submit', name)
 	})
 
-	socket.on('chat message', function(message){
-		console.log('Message: ' + message);
-		io.emit('chat message', message);
+	socket.on('add track', function(track){
+		console.log('track added')
 	})
 
 })
