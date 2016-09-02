@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="client.css">
+  	<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
   </head>
  
   <body>
@@ -11,6 +12,7 @@
   <ul id="chat_area">
     
   </ul>
+
   <form id="nickname_form">
     <label>Nickname:</label>
     <input id="nickname" type="text">
@@ -24,7 +26,7 @@
   <p id="users">Current users:</p>
   
   <!-- this will be on the main page -->
-  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="1000" height="400"></iframe>
+  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="1000"></iframe>
 
   <!-- <iframe src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:63MgFVcIldlw51imFtcgK1,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe,2CY92qejUrhyPUASawNVRr,2CY92qejUrhyPUASawNVRr, 1x6ACsKV4UdWS2FMuPFUiTm, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW" frameborder="0" allowtransparency="true" width="1000"></iframe> -->
 
@@ -32,9 +34,8 @@
   <!-- this will be on the main page -->
 
 
-
   <!-- this will be the guest user page -->
-  <div class="btn-group btn-group-justified" role="group" aria-label="...">
+  <div id="button-container" class="btn-group btn-group-justified" role="group" aria-label="...">
     <div class="btn-group" role="group">
       <button type="button" onclick="searchForTracks()" class="btn btn-default">Search</button>
     </div>
@@ -107,7 +108,7 @@
 
       searchForTracks = function(){
 
-        $("#tableResults, #search").show();
+        $("#tableResults, #search").show()	;
 
         $("#search").on("keyup", function(e) {
 
@@ -147,9 +148,8 @@
 
 
     });
-
   </script>
-  <script src='/socket.io/socket.io.js'></script>
+  <script src='/socket.io/socket.io.js'></script>  
   <script>
     var socket = io();
     $('#nickname_form').submit(function(){

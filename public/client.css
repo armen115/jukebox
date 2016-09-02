@@ -1,0 +1,9 @@
+#message_form {
+	display: none;
+}
+
+#button-container {	
+	width: 60%;
+	margin: 0 auto;
+	float: none;
+}

@@ -9,8 +9,13 @@ app.use(express.static('public'))
 
 // Route '/' to index.html 
 app.get('/', function(req, res){
-	res.sendfile(__dirname + '/index.html');
+	console.log(__dirname)
+	res.sendFile(__dirname + '/public/client.html');
 });
+
+app.get('/admin', function(req, res){
+	res.sendFile(__dirname + '/public/main.html')
+})
 
 io.on('connection', function(socket){
 	console.log('A user has connected')
