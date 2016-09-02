@@ -2,8 +2,8 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  	<link rel="stylesheet" href="client.css">
-  	<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="client.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
   </head>
  
   <body>
@@ -12,7 +12,6 @@
   <ul id="chat_area">
     
   </ul>
-
   <form id="nickname_form">
     <label>Nickname:</label>
     <input id="nickname" type="text">
@@ -26,16 +25,14 @@
   <p id="users">Current users:</p>
   
   <!-- this will be on the main page -->
-  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="1000"></iframe>
+  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="800px"></iframe>
 
-  <!-- <iframe src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:63MgFVcIldlw51imFtcgK1,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe,2CY92qejUrhyPUASawNVRr,2CY92qejUrhyPUASawNVRr, 1x6ACsKV4UdWS2FMuPFUiTm, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW" frameborder="0" allowtransparency="true" width="1000"></iframe> -->
-
+  <div id="queue"></div>  
 
   <!-- this will be on the main page -->
 
-
   <!-- this will be the guest user page -->
-  <div id="button-container" class="btn-group btn-group-justified" role="group" aria-label="...">
+  <div class="btn-group btn-group-justified" role="group" aria-label="...">
     <div class="btn-group" role="group">
       <button type="button" onclick="searchForTracks()" class="btn btn-default">Search</button>
     </div>
@@ -50,6 +47,19 @@
   <div id="autocomplete" class="center-block" style="margin-top: 20px; margin-bottom: 20px;">
     <input id="search" placeholder="Search for Tracks" class="center-block"></input>
   </div>
+
+  <table id="playlist_table" class="table table-striped col-md-12">
+    <thead>
+      <tr>
+        <th class="text-center">Track Name</th>
+        <th class="text-center">Artist</th>
+        <th class="text-center">Vote Count</th>  
+      </tr>
+    </thead>
+    <tbody id="searchResults">
+    </tbody>
+  </table>	
+
 
   <table id="tableResults" class="table table-striped col-md-12">
     <thead>
@@ -67,32 +77,46 @@
   <script>
     $(document).ready(function() {
 
-      // $("#spotifyPlayer").attr("src", src);
+      $("#tableResults, #search, #playlist_table").hide();
 
-      $("#tableResults, #search").hide();
+      searchForTracks = function(){
+      	$("#tableResults, #search").show();
+      }
+
+      $('')
+
+      playDefault = function(){
+        // 222240
+        var default_src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:2xmJNIkGmYBVoiu1WqA9il`;
+        $("#spotifyPlayer").attr("src", default_src);
+      };
+
+      playNow = function(track) {
+
+      }
       
-      addTrack = function(track){
-        var tracks = { one:"1x6ACsKV4UdWS2FMuPFUiTm", two:"5Z7ygHQo02SUrFmcgpwsKW", three:"5Z7ygHQo02SUrFmcgpwsKW", four:"2CY92qejUrhyPUASawNVRr", five:"2CY92qejUrhyPUASawNVRr" }
-        
-        tracks.five = track;
+      addTrackToPlaylist = function(track_id, track_name, artist){
+        getTrackDuration(track_id);
 
+        var $li = `<li>${track_name} : ${artist}</li>`
+        $('#queue').append($li);
 
-        var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${tracks.one},${tracks.two},${tracks.three},${tracks.four},${tracks.five}`;
+        // var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${current_track}`;
         
-        $("#spotifyPlayer").attr("src", src);
+        // $("#spotifyPlayer").attr("src", src);
         
       }
 
       displayResult = function(track) {
         var artists = [];
-
+        
         track.artists.forEach(function(artist){
           artists.push(artist.name);
         })
 
         var artist = artists.join(' / ');
 
-        var addToPlaylist = `<button onclick="addTrack('${track.id}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
+        var addToPlaylist = `<button onclick="addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
         var row = `<tr id="${track.id}">
                     <td class="text-center">${track.name}</td>
                     <td class="text-center">${artist}</<td>
@@ -108,7 +132,7 @@
 
       searchForTracks = function(){
 
-        $("#tableResults, #search").show()	;
+        $("#tableResults, #search").show();
 
         $("#search").on("keyup", function(e) {
 
@@ -140,14 +164,31 @@
 
       getPlaylist = function(){
         $("#tableResults, #search").hide();
-
+        $('#playlist_table').show();
         // get the playlist from the main app 
         console.log("Gets the playlist")       
 
       }
 
+      getTrackDuration = function(track_id){
+        $.ajax({
+          url: `https://api.spotify.com/v1/tracks/${track_id}`,
+          method: 'GET',
+          success: function(response) {     
+
+            console.log(response.duration_ms)
+
+          },
+          error: function(error) {
+            console.log(error); 
+          }
+        }); 
+      }
+
+      playDefault();
 
     });
+
   </script>
   <script src='/socket.io/socket.io.js'></script>  
   <script>
