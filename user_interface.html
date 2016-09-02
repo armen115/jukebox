@@ -8,14 +8,11 @@
   <body>
 
   <!-- this will be on the main page -->
-  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="1000" height="400"></iframe>
+  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="800px"></iframe>
 
-  <!-- <iframe src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:63MgFVcIldlw51imFtcgK1,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe,2CY92qejUrhyPUASawNVRr,2CY92qejUrhyPUASawNVRr, 1x6ACsKV4UdWS2FMuPFUiTm, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW, 5Z7ygHQo02SUrFmcgpwsKW" frameborder="0" allowtransparency="true" width="1000"></iframe> -->
-
+  <div id="queue"></div>  
 
   <!-- this will be on the main page -->
-
-
 
   <!-- this will be the guest user page -->
   <div class="btn-group btn-group-justified" role="group" aria-label="...">
@@ -49,36 +46,39 @@
 
   <script>
     $(document).ready(function() {
-      
 
-      
+      playDefault = function(){
+        // 222240
+        var default_src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:2xmJNIkGmYBVoiu1WqA9il`;
+        $("#spotifyPlayer").attr("src", default_src);
+      };
 
-      // $("#spotifyPlayer").attr("src", src);
+      playNow = function(track) {
 
-      $("#tableResults, #search").hide();
+      }
       
-      addTrack = function(track){
-        var tracks = { one:"1x6ACsKV4UdWS2FMuPFUiTm", two:"5Z7ygHQo02SUrFmcgpwsKW", three:"5Z7ygHQo02SUrFmcgpwsKW", four:"2CY92qejUrhyPUASawNVRr", five:"2CY92qejUrhyPUASawNVRr" }
+      addTrackToPlaylist = function(track_id, track_name, artist){
+        getTrackDuration(track_id);
+
+        var $li = `<li>${track_name} : ${artist}</li>`
+        $('#queue').append($li);
+
+        // var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${current_track}`;
         
-        tracks.five = track;
-
-
-        var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${tracks.one},${tracks.two},${tracks.three},${tracks.four},${tracks.five}`;
-        
-        $("#spotifyPlayer").attr("src", src);
+        // $("#spotifyPlayer").attr("src", src);
         
       }
 
       displayResult = function(track) {
         var artists = [];
-
+        
         track.artists.forEach(function(artist){
           artists.push(artist.name);
         })
 
         var artist = artists.join(' / ');
 
-        var addToPlaylist = `<button onclick="addTrack('${track.id}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
+        var addToPlaylist = `<button onclick="addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
         var row = `<tr id="${track.id}">
                     <td class="text-center">${track.name}</td>
                     <td class="text-center">${artist}</<td>
@@ -131,6 +131,25 @@
         console.log("Gets the playlist")       
 
       }
+
+      getTrackDuration = function(track_id){
+        $.ajax({
+          url: `https://api.spotify.com/v1/tracks/${track_id}`,
+          method: 'GET',
+          success: function(response) {     
+
+            console.log(response.duration_ms)
+
+          },
+          error: function(error) {
+            console.log(error); 
+          }
+        }); 
+      }
+
+      playDefault();
+
+      $("#tableResults, #search").hide();
 
 
 
