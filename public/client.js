@@ -13,25 +13,18 @@ $(document).ready(function() {
       addTrackToPlaylist = function(track_id, track_name, artist){
         // $(this).prop('disabled', true);
         getTrackDuration(track_id);
-
         socket.emit('add track', track_id, track_name, artist);
-
-        // var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${current_track}`;
-        
-        // $("#spotifyPlayer").attr("src", src);
-        
+                
       }
 
       displayResult = function(track) {
         var artists = [];
-        
         track.artists.forEach(function(artist){
           artists.push(artist.name);
         })
-
         var artist = artists.join(' / ');
 
-        var addToPlaylist = `<button onclick="addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
+        var addToPlaylist = `<button onclick"addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
         var resultRow = `<tr id="${track.id}">
                     <td class="text-center">${track.name}</td>
                     <td class="text-center">${artist}</<td>
@@ -47,7 +40,7 @@ $(document).ready(function() {
 
       searchForTracks = function(){
 
-        $("#tableResults, #search").show();
+        $("#tableSearchResults, #search").show();
         $("#tablePlaylist").hide();
 
         $("#search").on("keyup", function(e) {
@@ -63,7 +56,7 @@ $(document).ready(function() {
               success: function(response) {     
 
                 $("#searchResults").empty();
-                $("#tableResults").show();
+                $("#tableSearchResults").show();
                 response.tracks.items.forEach(function(track){
                   displayResult(track);
                 })
@@ -78,16 +71,8 @@ $(document).ready(function() {
 
       }
 
-      vote = function(){
-        $("#tableResults, #search").hide();
-        $("#tablePlaylist").show();
-        // get the playlist from the main app 
-        console.log("Gets the playlist")       
-
-      }
-
       getTrackDuration = function(track_id){
-        $.ajax({
+        $.ajax({  
           url: `https://api.spotify.com/v1/tracks/${track_id}`,
           method: 'GET',
           success: function(response) {     
@@ -103,13 +88,27 @@ $(document).ready(function() {
 
       playDefault();
 
-      $("#tableResults, #search, #tablePlaylist").hide();
-
+      // This function gets initialized when a button is added
+      // It gets the id of the parent <tr> and sends it to the server 
       initUpClick = function() { 
         document.querySelector('.up').onclick = function() {
           track_id = this.parentElement.parentElement.getAttribute('id')
           socket.emit('upvote', track_id) 
         }
       }
+
+      // Hide everything on page load
+      $("#tableSearchResults, #search, #tablePlaylist").hide();
+
+      // Hide search bar and results list, then show the main playlist
+      displayTablePlaylist = function(){
+        $("#tableSearchResults, #search").hide();
+        $("#tablePlaylist").show();
+      }
+
+      // Add click handlers for the two main search tabs
+      $('#mainSearchTab').on('click', searchForTracks);
+      $('#mainVoteTab').on('click', displayTablePlaylist)
+
 
     });
