@@ -14,12 +14,7 @@ $(document).ready(function() {
         // $(this).prop('disabled', true);
         getTrackDuration(track_id);
 
-        var playlistRow = `<tr id="${track_id}">
-                            <td class="text-center">${track_name}</td>
-                            <td class="text-center">${artist}</<td>
-                            <td class="text-center">
-                          </tr>`;
-        $('#playlist').append(playlistRow);
+        socket.emit('add track', track_id, track_name, artist);
 
         // var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${current_track}`;
         
@@ -110,5 +105,11 @@ $(document).ready(function() {
 
       $("#tableResults, #search, #tablePlaylist").hide();
 
+      initUpClick = function() { 
+        document.querySelector('.up').onclick = function() {
+          track_id = this.parentElement.parentElement.getAttribute('id')
+          socket.emit('upvote', track_id) 
+        }
+      }
 
     });
