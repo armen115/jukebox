@@ -1,38 +1,57 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="client.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
   </head>
  
   <body>
 
-  <!-- this will be on the main page -->
-  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="1000" height="400"></iframe>
+  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="800px" src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:2xmJNIkGmYBVoiu1WqA9il"></iframe>
 
-  <!-- this will be the guest user page -->
 
-  <table id="tableResults" class="table table-striped col-md-12">
+  <table id="mainPlaylist" class="table table-striped col-md-12" >
     <thead>
       <tr>
         <th class="text-center">Track Name</th>
         <th class="text-center">Artist</th>
-        <th class="text-center">Hi</th>  
+        <th class="text-center">Votes</th>  
       </tr>
     </thead>
-    <tbody id="songs">
-    <tr>
-		  <td>
-
-		  </td>
-	  </tr>
+    <tbody id="mainPlaylistRow">
     </tbody>
-  </table>
+  </table>  
 
-      
-    
+<script src='/socket.io/socket.io.js'></script> 
+<script>
+  var socket = io();
 
-  </body>
+  socket.on('broadcast track', function(track_id, track_name, artist){
+    var row = `<tr id="${track_id}">
+               <td class="text-center">${track_name}</td>
+               <td class="text-center">${artist}</<td>
+               <td class="text-center"></td>
+               </tr>`;
+
+    $('#mainPlaylistRow').append(row)
+  })
+
+  socket.on('increase votes', function(track_id){
+    id = $(`#${track_id}`).children().last().html();
+    id = Number(id) + 1 
+    $(`#${track_id}`).children().last().html(id)
+  })
+
+</script>
+<script src="tablesort.min.js"></script>
+<script src="tablesort.number.js"></script>
+<script>
+  new Tablesort(document.getElementById('mainPlaylist'), {
+    descending: true
+  });
+</script>
+</body>
 </html>
 
 
