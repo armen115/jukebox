@@ -17,19 +17,13 @@
     <input id="nickname" type="text">
     <button>Submit</button>
   </form>
-  <form id="message_form">
+<!--   <form id="message_form">
     <label>Message: </label>
     <input id="message" type="text">
     <button>Submit</button>
-  </form>
+  </form> -->
   <p id="users">Current users:</p>
   
-  <!-- this will be on the main page -->
-  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="800px"></iframe>
-
-  <div id="queue"></div>  
-
-  <!-- this will be on the main page -->
 
   <!-- this will be the guest user page -->
   <div class="btn-group btn-group-justified" role="group" aria-label="...">
@@ -53,7 +47,8 @@
       <tr>
         <th class="text-center">Track Name</th>
         <th class="text-center">Artist</th>
-        <th class="text-center">Vote Count</th>  
+        <th class="text-center">Votes</th>
+        <th class="text-center"></th>
       </tr>
     </thead>
     <tbody id="playlist">
@@ -74,6 +69,7 @@
   </table>
   <script src='/socket.io/socket.io.js'></script> 
   <script src='client.js'></script>  
+
   <script>
     var socket = io();
     $('#nickname_form').submit(function(){
@@ -81,19 +77,30 @@
       $('#nickname_form').hide();
       $('#message_form').show();
       return false;
-    })
-    $('#message_form').submit(function(){
-      socket.emit('chat message', $('#message').val());
-      $('#message').val('');
-      return false;
-    })
-    
+    })    
 
-    socket.on('add track')
-    
+    socket.on('broadcast track', function(track_id, track_name, artist){
+      var playlistRow = `<tr id="${track_id}">
+                         <td class="text-center">${track_name}</td>
+                         <td class="text-center">${artist}</<td>
+                         <td class="text-center">0</td>
+                         <td><button class="btn btn-primary up">Vote up</button><button class="btn btn-warning down">Vote down</button></td>
+                         </tr>`;
+      $('#playlist').append(playlistRow);
+      initUpClick();
+    })
+
+    socket.on('increase votes', function(track_id){
+      id = $(`#${track_id}`).children().last().prev().html();
+      id = Number(id) + 1 
+      $(`#${track_id}`).children().last().prev().html(id)
+    })
+      
     socket.on('name submit', function(name){
       $('#users').append(name + '');
     })
+
+
   </script>
 
   </body>
