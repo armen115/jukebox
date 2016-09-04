@@ -5,11 +5,16 @@ $(document).ready(function() {
     var track_name = e.getAttribute("data-track-name");
     var track_id = e.getAttribute("data-track-id");
     var artist = e.getAttribute("data-artist");
+    var track_duration = ""
 
     var $table = $('#tablePlaylist')[0];
 
     if ( !($table.rows[`${track_id}`]) ){
-      getTrackDuration(track_id);
+      getTrackDuration(track_id, function(response){
+        track_duration = response.duration_ms;
+        // we need to pass the track_duration to the main page
+        console.log(track_duration)
+      })
 
       socket.emit('add track', track_id, track_name, artist); 
       disableButton(e);
@@ -100,18 +105,11 @@ $(document).ready(function() {
     $("#tablePlaylist").show();
   }
 
-  getTrackDuration = function(track_id){
+  getTrackDuration = function(track_id, callback){
     $.ajax({
       url: `https://api.spotify.com/v1/tracks/${track_id}`,
       method: 'GET',
-      success: function(response) {     
-
-        console.log(response.duration_ms)
-
-      },
-      error: function(error) {
-        console.log(error); 
-      }
+      success: callback
     }); 
   }
 
