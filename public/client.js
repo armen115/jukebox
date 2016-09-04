@@ -24,7 +24,7 @@ $(document).ready(function() {
         })
         var artist = artists.join(' / ');
 
-        var addToPlaylist = `<button onclick"addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
+        var addToPlaylist = `<button onclick="addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
         var resultRow = `<tr id="${track.id}">
                     <td class="text-center">${track.name}</td>
                     <td class="text-center">${artist}</<td>
@@ -93,7 +93,7 @@ $(document).ready(function() {
       initUpClick = function() { 
         document.querySelector('.up').onclick = function() {
           track_id = this.parentElement.parentElement.getAttribute('id')
-          socket.emit('upvote', track_id) 
+          socket.emit('upvote', track_id)
         }
       }
 

@@ -2,27 +2,31 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="client.css">
+    <link rel="stylesheet" href="main.css">
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
   </head>
  
   <body>
+    <div class="container">
+    <div class="container" id="header-div">
+    </div>
+      <div class="container" id="main">
+        <img id="mic" src="/images/mic.png">
 
-  <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="800px" src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:2xmJNIkGmYBVoiu1WqA9il"></iframe>
-
-
-  <table id="mainPlaylist" class="table table-striped col-md-12" >
-    <thead>
-      <tr>
-        <th class="text-center">Track Name</th>
-        <th class="text-center">Artist</th>
-        <th class="text-center">Votes</th>  
-      </tr>
-    </thead>
-    <tbody id="mainPlaylistRow">
-    </tbody>
-  </table>  
-
+        <iframe id="spotifyPlayer" frameborder="0" allowtransparency="true" width="800px" src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:2xmJNIkGmYBVoiu1WqA9il"></iframe>
+        <table id="mainPlaylist" class="table table-striped col-md-12" >
+          <thead>
+            <tr>
+              <th class="text-center">Track Name</th>
+              <th class="text-center">Artist</th>
+              <th class="text-center">Votes</th>  
+            </tr>
+          </thead>
+          <tbody id="mainPlaylistRow">
+          </tbody>
+        </table>  
+      </div>
+  </div>
 <script src='/socket.io/socket.io.js'></script> 
 <script>
   var socket = io();
@@ -31,7 +35,7 @@
     var row = `<tr id="${track_id}">
                <td class="text-center">${track_name}</td>
                <td class="text-center">${artist}</<td>
-               <td class="text-center"></td>
+               <td class="text-center">0</td>
                </tr>`;
 
     $('#mainPlaylistRow').append(row)
