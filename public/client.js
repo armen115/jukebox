@@ -1,115 +1,126 @@
 $(document).ready(function() {
+  $("#tableResults, #search, #tablePlaylist").hide();
 
-      playDefault = function(){
-        // 222240
-        var default_src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:2xmJNIkGmYBVoiu1WqA9il`;
-        $("#spotifyPlayer").attr("src", default_src);
-      };
+  addTrackToPlaylist = function(e){
+    var track_name = e.getAttribute("data-track-name");
+    var track_id = e.getAttribute("data-track-id");
+    var artist = e.getAttribute("data-artist");
 
-      playNow = function(track) {
+    var $table = $('#tablePlaylist')[0];
 
-      }
-      
-      addTrackToPlaylist = function(track_id, track_name, artist){
-        // $(this).prop('disabled', true);
-        getTrackDuration(track_id);
+    if ( !($table.rows[`${track_id}`]) ){
+      getTrackDuration(track_id);
 
-        socket.emit('add track', track_id, track_name, artist);
+      socket.emit('add track', track_id, track_name, artist); 
+      disableButton(e);
+    } else {
+      trackExisting(e);
+    }    
+  }
 
-        // var src = `https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:${current_track}`;
-        
-        // $("#spotifyPlayer").attr("src", src);
-        
-      }
+  disableButton = function(e) {
+    e.disabled = true;
+    e.innerHTML = "Added to playlist";
+    e.setAttribute("class", "btn btn-success btn-xs");
+  }
 
-      displayResult = function(track) {
-        var artists = [];
-        
-        track.artists.forEach(function(artist){
-          artists.push(artist.name);
-        })
+  trackExisting = function(e) {
+    e.innerHTML = "Track is already in the playlist! Vote for it!";
+    e.setAttribute("class", "btn btn-warning btn-xs");
+  }
 
-        var artist = artists.join(' / ');
+  // Adds click event handler on buttons. You can do the same thing for the upvote/downvote.
+  $('#tableResults').on('click', '.addButton', function(){ 
+    addTrackToPlaylist(this);
+  });
+  
+  displayResult = function(track) {
+    var artists = [];
+    
+    track.artists.forEach(function(artist){
+      artists.push(artist.name);
+    })
 
-        var addToPlaylist = `<button onclick="addTrackToPlaylist('${track.id}', '${track.name}', '${artist}')" class="btn btn-danger btn-xs">Add to Playlist</button>`;
-        var resultRow = `<tr id="${track.id}">
-                    <td class="text-center">${track.name}</td>
-                    <td class="text-center">${artist}</<td>
-                    <td class="text-center">
-                      <audio controls>
-                        <source src="${track.preview_url}" type="audio/ogg">
-                        <source src="${track.preview_url}" type="audio/mpeg">
-                      </audio>
-                    <td class="text-center">${addToPlaylist}</td>
-                   </tr>`;
-        $('#searchResults').append(resultRow);
-      }
+    var artist = artists.join(' / ');
 
-      searchForTracks = function(){
+    var addPlaylistButton = `<button data-track-name=${track.name} data-track-id=${track.id} data-artist=${artist} class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+    
+    var resultRow = `<tr id="${track.id}">
+                      <td class="text-center">${track.name}</td>
+                      <td class="text-center">${artist}</<td>
+                      <td class="text-center">
+                        <audio controls>
+                          <source src="${track.preview_url}" type="audio/ogg">
+                          <source src="${track.preview_url}" type="audio/mpeg">
+                        </audio>
+                      <td class="text-center">${addPlaylistButton}</td>
+                     </tr>`;
+    $('#searchResults').append(resultRow);
+  }
 
-        $("#tableResults, #search").show();
-        $("#tablePlaylist").hide();
+  searchForTracks = function(){
 
-        $("#search").on("keyup", function(e) {
+    $("#tableResults, #search").show();
+    $("#tablePlaylist").hide();
 
-          var query = $("#search").val();
-          var searchTrack = query.split(' ').join('+');
+    $("#search").on("keyup", function(e) {
 
-          if(query.length > 0) {
+      var query = $("#search").val();
+      var searchTrack = query.split(' ').join('+');
 
-            $.ajax({
-              url: `https://api.spotify.com/v1/search?q=${searchTrack}&type=track&market=CA&limit=5&offset=0`,
-              method: 'GET',
-              success: function(response) {     
+      if(query.length > 0) {
 
-                $("#searchResults").empty();
-                $("#tableResults").show();
-                response.tracks.items.forEach(function(track){
-                  displayResult(track);
-                })
-
-              },
-              error: function(error) {
-                console.log(error); 
-              }
-            }); 
-          }
-        });
-
-      }
-
-      vote = function(){
-        $("#tableResults, #search").hide();
-        $("#tablePlaylist").show();
-        // get the playlist from the main app 
-        console.log("Gets the playlist")       
-
-      }
-
-      getTrackDuration = function(track_id){
         $.ajax({
-          url: `https://api.spotify.com/v1/tracks/${track_id}`,
+          url: `https://api.spotify.com/v1/search?q=${searchTrack}&type=track&market=CA&limit=5&offset=0`,
           method: 'GET',
-          success: function(response) {     
+          success: function(response) {  
 
-            console.log(response.duration_ms)
+            $("#searchResults").empty();
+            $("#tableResults").show();
+
+            response.tracks.items.forEach(function(track){
+              displayResult(track);
+            })
 
           },
           error: function(error) {
             console.log(error); 
           }
         }); 
+
+      } else if (query.length == 0) {
+        $("#searchResults").empty();
       }
-
-      playDefault();
-
-      $("#tableResults, #search, #tablePlaylist").hide();
-
-      initUpClick = function() { 
-        document.querySelector('.up').onclick = function() {
-          track_id = this.parentElement.parentElement.getAttribute('id')
-          socket.emit('upvote', track_id) 
-        }
-      }
-
     });
+
+  }
+
+  vote = function(){
+    $("#tableResults, #search").hide();
+    $("#tablePlaylist").show();
+  }
+
+  getTrackDuration = function(track_id){
+    $.ajax({
+      url: `https://api.spotify.com/v1/tracks/${track_id}`,
+      method: 'GET',
+      success: function(response) {     
+
+        console.log(response.duration_ms)
+
+      },
+      error: function(error) {
+        console.log(error); 
+      }
+    }); 
+  }
+
+  initUpClick = function() { 
+    document.querySelector('.up').onclick = function() {
+      track_id = this.parentElement.parentElement.getAttribute('id')
+      console.log(track_id)
+      socket.emit('upvote', track_id) 
+    }
+  }
+
+});

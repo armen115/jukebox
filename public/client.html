@@ -8,7 +8,7 @@
  
   <body>
 
-  <h1>Index</h1>
+  <h1>Client Page</h1>
   <ul id="chat_area">
     
   </ul>
@@ -17,15 +17,9 @@
     <input id="nickname" type="text">
     <button>Submit</button>
   </form>
-<!--   <form id="message_form">
-    <label>Message: </label>
-    <input id="message" type="text">
-    <button>Submit</button>
-  </form> -->
+
   <p id="users">Current users:</p>
   
-
-  <!-- this will be the guest user page -->
   <div class="btn-group btn-group-justified" role="group" aria-label="...">
     <div class="btn-group" role="group">
       <button type="button" onclick="searchForTracks()" class="btn btn-default">Search</button>
@@ -99,8 +93,6 @@
     socket.on('name submit', function(name){
       $('#users').append(name + '');
     })
-
-
   </script>
 
   </body>
