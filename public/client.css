@@ -11,3 +11,7 @@
 td {
 	width: 25%;
 }
+
+.headline, #nickname_form, #users {
+	text-align: center;
+}

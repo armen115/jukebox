@@ -1,124 +1,122 @@
 $(document).ready(function() {
-  $("#tableResults, #search, #tablePlaylist").hide();
+ $("#tableSearchResults, #search, #tablePlaylist").hide();
 
-  addTrackToPlaylist = function(e){
-    var track_name = e.getAttribute("data-track-name");
-    var track_id = e.getAttribute("data-track-id");
-    var artist = e.getAttribute("data-artist");
-    var track_duration = ""
+ addTrackToPlaylist = function(e){
+   var track_name = e.getAttribute("data-track-name");
+   var track_id = e.getAttribute("data-track-id");
+   var artist = e.getAttribute("data-artist");
 
-    var $table = $('#tablePlaylist')[0];
+   var $table = $('#tablePlaylist')[0];
 
-    if ( !($table.rows[`${track_id}`]) ){
-      getTrackDuration(track_id, function(response){
-        track_duration = response.duration_ms;
-        // we need to pass the track_duration to the main page
-        console.log(track_duration)
-      })
+   if ( !($table.rows[`${track_id}`]) ){
+     getTrackDuration(track_id, function(response){
+       var track_duration = response.duration_ms;
+       socket.emit('add track', track_id, track_name, artist, track_duration); 
+     })
 
-      socket.emit('add track', track_id, track_name, artist); 
-      disableButton(e);
-    } else {
-      trackExisting(e);
-    }    
-  }
+     disableButton(e);
+   } else {
+     trackExisting(e);
+   }    
+ }
 
-  disableButton = function(e) {
-    e.disabled = true;
-    e.innerHTML = "Added to playlist";
-    e.setAttribute("class", "btn btn-success btn-xs");
-  }
+ disableButton = function(e) {
+   e.disabled = true;
+   e.innerHTML = "Added to playlist";
+   e.setAttribute("class", "btn btn-success btn-xs");
+ }
 
-  trackExisting = function(e) {
-    e.innerHTML = "Track is already in the playlist! Vote for it!";
-    e.setAttribute("class", "btn btn-warning btn-xs");
-  }
+ trackExisting = function(e) {
+   e.innerHTML = "Track is already in the playlist! Vote for it!";
+   e.setAttribute("class", "btn btn-warning btn-xs");
+ }
 
-  // Adds click event handler on buttons. You can do the same thing for the upvote/downvote.
-  $('#tableResults').on('click', '.addButton', function(){ 
-    addTrackToPlaylist(this);
-  });
-  
-  displayResult = function(track) {
-    var artists = [];
-    
-    track.artists.forEach(function(artist){
-      artists.push(artist.name);
-    })
+ // Adds click event handler on buttons. You can do the same thing for the upvote/downvote.
+ $('#tableSearchResults').on('click', '.addButton', function(){ 
+   addTrackToPlaylist(this);
+ });
+ 
+ displayResult = function(track) {
+   var artists = [];
+   
+   track.artists.forEach(function(artist){
+     artists.push(artist.name);
+   })
 
-    var artist = artists.join(' / ');
+   var artist = artists.join(' / ');
 
-    var addPlaylistButton = `<button data-track-name=${track.name} data-track-id=${track.id} data-artist=${artist} class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
-    
-    var resultRow = `<tr id="${track.id}">
-                      <td class="text-center">${track.name}</td>
-                      <td class="text-center">${artist}</<td>
-                      <td class="text-center">
-                        <audio controls>
-                          <source src="${track.preview_url}" type="audio/ogg">
-                          <source src="${track.preview_url}" type="audio/mpeg">
-                        </audio>
-                      <td class="text-center">${addPlaylistButton}</td>
-                     </tr>`;
-    $('#searchResults').append(resultRow);
-  }
+   var addPlaylistButton = `<button data-track-name=${track.name} data-track-id=${track.id} data-artist=${artist} class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+   
+   var resultRow = `<tr id="${track.id}">
+                     <td class="text-center">${track.name}</td>
+                     <td class="text-center">${artist}</<td>
+                     <td class="text-center">
+                       <audio controls>
+                         <source src="${track.preview_url}" type="audio/ogg">
+                         <source src="${track.preview_url}" type="audio/mpeg">
+                       </audio>
+                     <td class="text-center">${addPlaylistButton}</td>
+                    </tr>`;
+   $('#searchResults').append(resultRow);
+ }
 
-  searchForTracks = function(){
 
-    $("#tableResults, #search").show();
-    $("#tablePlaylist").hide();
+ displayTablePlaylist = function(){
+   $("#tableSearchResults, #search").hide();
+   $("#tablePlaylist").show();
+ }
 
-    $("#search").on("keyup", function(e) {
+ searchForTracks = function(){
 
-      var query = $("#search").val();
-      var searchTrack = query.split(' ').join('+');
+   $("#tableSearchResults, #search").show();
+   $("#tablePlaylist").hide();
 
-      if(query.length > 0) {
+   $("#search").on("keyup", function(e) {
 
-        $.ajax({
-          url: `https://api.spotify.com/v1/search?q=${searchTrack}&type=track&market=CA&limit=5&offset=0`,
-          method: 'GET',
-          success: function(response) {  
+     var query = $("#search").val();
+     var searchTrack = query.split(' ').join('+');
 
-            $("#searchResults").empty();
-            $("#tableResults").show();
+     if(query.length > 0) {
 
-            response.tracks.items.forEach(function(track){
-              displayResult(track);
-            })
+       $.ajax({
+         url: `https://api.spotify.com/v1/search?q=${searchTrack}&type=track&market=CA&limit=5&offset=0`,
+         method: 'GET',
+         success: function(response) {  
 
-          },
-          error: function(error) {
-            console.log(error); 
-          }
-        }); 
+           $("#searchResults").empty();
+           $("#tableSearchResults").show();
 
-      } else if (query.length == 0) {
-        $("#searchResults").empty();
-      }
-    });
+           response.tracks.items.forEach(function(track){
+             displayResult(track);
+           })
 
-  }
+         },
+         error: function(error) {
+           console.log(error); 
+         }
+       });
 
-  vote = function(){
-    $("#tableResults, #search").hide();
-    $("#tablePlaylist").show();
-  }
+     } else if (query.length == 0) {
+       $("#searchResults").empty();
+     }
+   });
 
-  getTrackDuration = function(track_id, callback){
-    $.ajax({
-      url: `https://api.spotify.com/v1/tracks/${track_id}`,
-      method: 'GET',
-      success: callback
-    }); 
-  }
+ }
 
-  initUpClick = function() { 
-    document.querySelector('.up').onclick = function() {
-      track_id = this.parentElement.parentElement.getAttribute('id')
-      console.log(track_id)
-      socket.emit('upvote', track_id) 
-    }
-  }
+ getTrackDuration = function(track_id, callback){
+   $.ajax({
+     url: `https://api.spotify.com/v1/tracks/${track_id}`,
+     method: 'GET',
+     success: callback
+   }); 
+ }
+
+ $('#tablePlaylist').on('click', '.up', function(){
+     track_id = this.parentElement.parentElement.getAttribute('id')
+     socket.emit('upvote', track_id) 
+ });
+
+ $('#mainSearchTab').on('click', searchForTracks)
+ $('#mainVoteTab').on('click', displayTablePlaylist)
 
 });

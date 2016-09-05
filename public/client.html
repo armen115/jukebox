@@ -7,60 +7,63 @@
   </head>
  
   <body>
-
-  <h1>Client Page</h1>
-  <ul id="chat_area">
+  <div class="container">
+    <h1 class="headline">Jukebox</h1>
+    <ul id="chat_area">
+      
+    </ul>
+    <form id="nickname_form">
+      <label>Nickname:</label>
+      <input id="nickname" type="text">
+      <button>Submit</button>
+    </form>
+  <!--   <form id="message_form">
+      <label>Message: </label>
+      <input id="message" type="text">
+      <button>Submit</button>
+    </form> -->
     
-  </ul>
-  <form id="nickname_form">
-    <label>Nickname:</label>
-    <input id="nickname" type="text">
-    <button>Submit</button>
-  </form>
 
-  <p id="users">Current users:</p>
-  
-  <div class="btn-group btn-group-justified" role="group" aria-label="...">
-    <div class="btn-group" role="group">
-      <button type="button" onclick="searchForTracks()" class="btn btn-default">Search</button>
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+        <button type="button" id="mainSearchTab" class="btn btn-default">Search</button>
+      </div>
+      <div class="btn-group" role="group">
+        <button type="button" id="mainVoteTab" class="btn btn-default">UpVote/DownVote</button>
+      </div>
     </div>
-    <div class="btn-group" role="group">
-      <button type="button" onclick="vote()" class="btn btn-default">UpVote/DownVote</button>
+
+    <div id="autocomplete" class="center-block" style="margin-top: 20px; margin-bottom: 20px;">
+      <input id="search" placeholder="Search for Tracks" class="center-block"></input>
     </div>
-    <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default">Exit</button>
-    </div>
+
+    <table id="tablePlaylist" class="table table-striped col-md-12">
+      <thead>
+        <tr>
+          <th class="text-center">Track Name</th>
+          <th class="text-center">Artist</th>
+          <th class="text-center">Votes</th>
+          <th class="text-center"></th>
+        </tr>
+      </thead>
+      <tbody id="playlist">
+      </tbody>
+    </table>	
+
+    <table id="tableSearchResults" class="table table-striped col-md-12">
+      <thead>
+        <tr>
+          <th class="text-center">Track Name</th>
+          <th class="text-center">Artist</th>
+          <th class="text-center">Preview</th>
+          <th class="text-center"></th>  
+        </tr>
+      </thead>
+      <tbody id="searchResults">
+      </tbody>
+    </table>
+    <p id="users">Current users:</p>
   </div>
-
-  <div id="autocomplete" class="center-block" style="margin-top: 20px; margin-bottom: 20px;">
-    <input id="search" placeholder="Search for Tracks" class="center-block"></input>
-  </div>
-
-  <table id="tablePlaylist" class="table table-striped col-md-12">
-    <thead>
-      <tr>
-        <th class="text-center">Track Name</th>
-        <th class="text-center">Artist</th>
-        <th class="text-center">Votes</th>
-        <th class="text-center"></th>
-      </tr>
-    </thead>
-    <tbody id="playlist">
-    </tbody>
-  </table>	
-
-  <table id="tableResults" class="table table-striped col-md-12">
-    <thead>
-      <tr>
-        <th class="text-center">Track Name</th>
-        <th class="text-center">Artist</th>
-        <th class="text-center">Preview</th>
-        <th class="text-center"></th>  
-      </tr>
-    </thead>
-    <tbody id="searchResults">
-    </tbody>
-  </table>
   <script src='/socket.io/socket.io.js'></script> 
   <script src='client.js'></script>  
 
@@ -81,13 +84,12 @@
                          <td><button class="btn btn-primary up">Vote up</button><button class="btn btn-warning down">Vote down</button></td>
                          </tr>`;
       $('#playlist').append(playlistRow);
-      initUpClick();
     })
 
     socket.on('increase votes', function(track_id){
       id = $(`#${track_id}`).children().last().prev().html();
       id = Number(id) + 1 
-      $(`#${track_id}`).children().last().prev().html(id)
+      $(`#${track_id}`).children().last().prev().html(id);
     })
       
     socket.on('name submit', function(name){
