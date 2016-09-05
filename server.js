@@ -38,6 +38,10 @@ io.on('connection', function(socket){
   socket.on('upvote', function(track_id){
   	io.emit('increase votes', track_id)
   })
+
+  socket.on('downvote', function(track_id){
+  	io.emit('decrease votes', track_id)
+  })
 })
 
 http.listen(3000, function(){

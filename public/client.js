@@ -111,9 +111,15 @@ $(document).ready(function() {
    }); 
  }
 
+// Assign clicks for new songs added to playlist table
  $('#tablePlaylist').on('click', '.up', function(){
      track_id = this.parentElement.parentElement.getAttribute('id')
-     socket.emit('upvote', track_id) 
+     socket.emit('upvote', track_id)  
+ });
+
+ $('#tablePlaylist').on('click', '.down', function(){
+     track_id = this.parentElement.parentElement.getAttribute('id')
+     socket.emit('downvote', track_id)  
  });
 
  $('#mainSearchTab').on('click', searchForTracks)

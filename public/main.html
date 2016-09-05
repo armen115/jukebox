@@ -19,7 +19,7 @@
             <tr>
               <th class="text-center">Track Name</th>
               <th class="text-center">Artist</th>
-              <th class="text-center">Votes</th>  
+              <th class="text-center sort-default">Votes</th>  
             </tr>
           </thead>
           <tbody id="mainPlaylistRow">
@@ -45,13 +45,14 @@
     id = $(`#${track_id}`).children().last().html();
     id = Number(id) + 1 
     $(`#${track_id}`).children().last().html(id)
+    sort.refresh()
   })
 
 </script>
 <script src="tablesort.min.js"></script>
 <script src="tablesort.number.js"></script>
 <script>
-  new Tablesort(document.getElementById('mainPlaylist'), {
+  sort = new Tablesort(document.getElementById('mainPlaylist'), {
     descending: true
   });
 </script>

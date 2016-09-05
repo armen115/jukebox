@@ -91,6 +91,13 @@
       id = Number(id) + 1 
       $(`#${track_id}`).children().last().prev().html(id);
     })
+
+    socket.on('decrease votes', function(track_id){
+      id = $(`#${track_id}`).children().last().prev().html();
+      id = Number(id) - 1 
+      $(`#${track_id}`).children().last().prev().html(id);
+    })
+
       
     socket.on('name submit', function(name){
       $('#users').append(name + '');
