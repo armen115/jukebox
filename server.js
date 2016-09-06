@@ -30,9 +30,9 @@ io.on('connection', function(socket){
 		io.emit('name submit', name)
 	})
 
-  socket.on('add track', function(track_id, track_name, artist, track_duration){
-    console.log(`Song added: ID: ${track_id}, NAME: ${track_name}, ARTIST: ${artist}, DURATION: ${track_duration}`)
-    io.emit('broadcast track', track_id, track_name, artist, track_duration)
+  socket.on('add track', function(track_id, track_title, artist){
+    console.log(`Song added: ID: ${track_id}, NAME: ${track_title}, ARTIST: ${artist}`)
+    io.emit('broadcast track', track_id, track_title, artist)
   })
 
   socket.on('upvote', function(track_id){
