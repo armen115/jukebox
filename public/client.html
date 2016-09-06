@@ -74,7 +74,16 @@
       $('#nickname_form').hide();
       $('#message_form').show();
       return false;
-    })    
+    })
+
+    
+    socket.on('send names', function(name){
+      $('#users').append(name + ", ")
+    })
+
+    socket.on('disconnect', function(){
+      io.emit('user gone')
+    })
 
     socket.on('broadcast track', function(track_id, track_name, artist){
       var playlistRow = `<tr id="${track_id}">

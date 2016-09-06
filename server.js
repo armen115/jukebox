@@ -44,9 +44,16 @@ io.on('connection', function(socket){
 		console.log('user disconnected')
 	})
 
+	socket.on('user gone', function(){
+		console.log('user said bye')
+	})
+
+  currentUsers = []
+
 	socket.on('name submit', function(name){
+		currentUsers.push(name)
 		console.log(name + ' has joined');
-		io.emit('name submit', name)
+		io.emit('send names', name)
 	})
 
   socket.on('add track', function(track_id, track_name, artist, track_duration){

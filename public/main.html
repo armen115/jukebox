@@ -24,7 +24,8 @@
           </thead>
           <tbody id="mainPlaylistRow">
           </tbody>
-        </table>  
+        </table>
+        <p id="users">Current users: </p>
       </div>
   </div>
 <script>
@@ -74,11 +75,9 @@
     sort.refresh()
   })
 
-  socket.on('fetch tracks', function(){
-    socket.emit('give tracks', mainPlaylistVariable)
+  socket.on('send names', function(name){
+    $('#users').append(name + ", ")
   })
-
-
 
 </script>
 <script src="tablesort.min.js"></script>
