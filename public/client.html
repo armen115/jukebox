@@ -42,7 +42,7 @@
         <tr>
           <th class="text-center">Track Name</th>
           <th class="text-center">Artist</th>
-          <th class="text-center">Votes</th>
+          <th class="text-center sort-default">Votes</th>
           <th class="text-center"></th>
         </tr>
       </thead>
@@ -62,7 +62,7 @@
       <tbody id="searchResults">
       </tbody>
     </table>
-    <p id="users">Current users:</p>
+    <p id="users">Current users: </p>
   </div>
   <script src='/socket.io/socket.io.js'></script> 
   <script src='client.js'></script>  
@@ -97,13 +97,18 @@
       id = Number(id) - 1 
       $(`#${track_id}`).children().last().prev().html(id);
     })
-
       
     socket.on('name submit', function(name){
       $('#users').append(name + '');
     })
   </script>
-
+  <script src="tablesort.min.js"></script>
+  <script src='tablesort.number.js'></script>
+  <script>  
+    sort = new Tablesort(document.getElementById('tablePlaylist'),{
+      descending: true
+    });
+  </script>
   </body>
 </html>
 

@@ -3,6 +3,20 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var fs = require("fs");
+var file = "hello.db";
+var exists = fs.existsSync(file);
+var sqlite3 = require('sqlite3').verbose();
+
+var db = new sqlite3.Database(file);
+
+db.serialize(function() {
+  if(!exists) {
+    db.run("CREATE TABLE songs (track_id STRING, track_name STRING, track_artist STRING, votes INTEGER)");
+  }
+});
+
+// tracksArray = []
 
 // Load all files the public folder
 app.use(express.static('public'))
@@ -14,8 +28,13 @@ app.get('/', function(req, res){
 });
 
 app.get('/admin', function(req, res){
-	
 	res.sendFile(__dirname + '/public/main.html')
+})
+
+app.get('/songs', function(req, res){
+  var dbMusic = db.all("SELECT * FROM songs", function(err, rows){
+	  res.json(rows)
+	})
 })
 
 io.on('connection', function(socket){
@@ -31,17 +50,31 @@ io.on('connection', function(socket){
 	})
 
   socket.on('add track', function(track_id, track_name, artist, track_duration){
+    db.run("INSERT INTO songs VALUES (?, ?, ?, ?)", [track_id, track_name, artist, 0]);
     console.log(`Song added: ID: ${track_id}, NAME: ${track_name}, ARTIST: ${artist}, DURATION: ${track_duration}`)
     io.emit('broadcast track', track_id, track_name, artist, track_duration)
   })
 
   socket.on('upvote', function(track_id){
+    db.run("UPDATE songs SET votes = votes + 1 WHERE track_id = ?", [track_id], function(err, res){
+    	if (err) {
+    		console.log('vote could not be processed')
+    	}
+    });
   	io.emit('increase votes', track_id)
   })
 
   socket.on('downvote', function(track_id){
+    db.run("UPDATE songs SET votes = votes + 1 WHERE track_id = ?", [track_id], function(err, res){
+	  	if (err){
+    		console.log('vote could not be processed')
+	  	}
+  	})
   	io.emit('decrease votes', track_id)
-  })
+	})
+
+
+
 })
 
 http.listen(3000, function(){

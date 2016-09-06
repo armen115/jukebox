@@ -27,17 +27,35 @@
         </table>  
       </div>
   </div>
+<script>
+  // Load all songs from database on page load and build initial table 
+  $(document).ready(function(){
+     $.getJSON({
+      url: '/songs',
+      success: function(response){
+        response.forEach(function(json){
+          var row = `<tr id="${json.track_id}">
+                     <td class="text-center">${json.track_name}</td>
+                     <td class="text-center">${json.track_artist}</<td>
+                     <td class="text-center">${json.votes}</td>
+                     </tr>`;
+          $('#mainPlaylistRow').append(row)
+        })
+      }
+    });
+  })
+</script>
 <script src='/socket.io/socket.io.js'></script> 
+<script></script>
 <script>
   var socket = io();
 
-  socket.on('broadcast track', function(track_id, track_name, artist, track_duration){
-    var row = `<tr id="${track_id}" data-track-duration=${track_duration}>
+  socket.on('broadcast track', function(track_id, track_name, artist){
+    var row = `<tr id="${track_id}">
                <td class="text-center">${track_name}</td>
                <td class="text-center">${artist}</<td>
                <td class="text-center">0</td>
                </tr>`;
-
     $('#mainPlaylistRow').append(row)
   })
 
@@ -47,6 +65,19 @@
     $(`#${track_id}`).children().last().html(id)
     sort.refresh()
   })
+
+  socket.on('decrease votes', function(track_id){
+    id = $(`#${track_id}`).children().last().html();
+    id = Number(id) - 1 
+    $(`#${track_id}`).children().last().html(id)
+    sort.refresh()
+  })
+
+  socket.on('fetch tracks', function(){
+    socket.emit('give tracks', mainPlaylistVariable)
+  })
+
+
 
 </script>
 <script src="tablesort.min.js"></script>
