@@ -36,24 +36,30 @@ app.get('/songs', function(req, res){
 	  res.json(rows)
 	})
 })
+// Store objects of current users in this array
+currentUsers = []
 
 io.on('connection', function(socket){
 	console.log('A user has connected')
 	
 	socket.on('disconnect', function(){
-		console.log('user disconnected')
+		for(var i = 0; i < currentUsers.length; i++ ) {
+			if (socket.id.replace('/#','') == currentUsers[i]['id']) {
+				name = currentUsers[i]['name']
+				id = currentUsers[i]['id']
+				console.log(name + ' disconnected')
+				io.emit('delete name', name, id)
+			}
+		}
 	})
 
-	socket.on('user gone', function(){
-		console.log('user said bye')
-	})
-
-  currentUsers = []
-
-	socket.on('name submit', function(name){
-		currentUsers.push(name)
+	socket.on('name submit', function(name, id){
+		var obj = {	name: name,
+								id: id
+							}
+		currentUsers.push(obj)
 		console.log(name + ' has joined');
-		io.emit('send names', name)
+		io.emit('send names', name, id)
 	})
 
   socket.on('add track', function(track_id, track_title, artist){

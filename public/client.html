@@ -62,7 +62,7 @@
       <tbody id="searchResults">
       </tbody>
     </table>
-    <p id="users">Current users: </p>
+    <div id="users">Current users: </div>
   </div>
   <script src='/socket.io/socket.io.js'></script> 
   <script src='client.js'></script>  
@@ -70,19 +70,18 @@
   <script>
     var socket = io();
     $('#nickname_form').submit(function(){
-      socket.emit('name submit', $('#nickname').val());
+      socket.emit('name submit', $('#nickname').val(), socket.id);
       $('#nickname_form').hide();
       $('#message_form').show();
       return false;
     })
 
-    
-    socket.on('send names', function(name){
-      $('#users').append(name + ", ")
+    socket.on('send names', function(name, id){
+      $('#users').append(`<p data-id=${id}>${name} </p>`)
     })
 
-    socket.on('disconnect', function(){
-      io.emit('user gone')
+    socket.on('delete name', function(name, id){
+      $(`p[data-id=${id}`).remove();
     })
 
     socket.on('broadcast track', function(track_id, track_title, artist){
@@ -107,9 +106,7 @@
       $(`#${track_id}`).children().last().prev().html(id);
     })
       
-    socket.on('name submit', function(name){
-      $('#users').append(name + '');
-    })
+
   </script>
   <script src="tablesort.min.js"></script>
   <script src='tablesort.number.js'></script>
