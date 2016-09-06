@@ -73,8 +73,6 @@ io.on('connection', function(socket){
   	io.emit('decrease votes', track_id)
 	})
 
-
-
 })
 
 http.listen(3000, function(){
