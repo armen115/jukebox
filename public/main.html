@@ -70,8 +70,12 @@
     id = $(`#${track_id}`).children().last().html();
     id = Number(id) + 1 
     $(`#${track_id}`).children().last().html(id)
-    $('#vote_feed').append(`<p>${user_name} liked a song</p>`)
-    sort.refresh()
+    if (user_name == null) {
+      $('#vote_feed').append(`<p>A user liked a song</p>`)
+    } else {
+      $('#vote_feed').append(`<p>${user_name} liked a song</p>`)
+      sort.refresh()
+    }
   })
 
   socket.on('decrease votes', function(user_name, track_id){
@@ -108,12 +112,9 @@
       var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1").attr('id'))
       DZ.player.playTracks([track_id], function(){
         $(`#${track_id}`).remove();
+        socket.emit('delete track', track_id)
       });
-    })
-
-    DZ.Event.subscribe('current_track', function(track, evt_name){
-      console.log("Currently playing track", track);
-    });
+    })   
   }
 
 </script>
