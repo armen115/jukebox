@@ -108,12 +108,9 @@
       var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1").attr('id'))
       DZ.player.playTracks([track_id], function(){
         $(`#${track_id}`).remove();
+        socket.emit('delete track', track_id)
       });
-    })
-
-    DZ.Event.subscribe('current_track', function(track, evt_name){
-      console.log("Currently playing track", track);
-    });
+    })   
   }
 
 </script>

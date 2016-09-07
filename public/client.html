@@ -111,7 +111,20 @@
       // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
       
+    socket.on('name submit', function(name){
+      $('#users').append(name + '');
+    })
 
+    socket.on('delete track', function(track_id){
+      
+    })
+  </script>
+  <script src="tablesort.min.js"></script>
+  <script src='tablesort.number.js'></script>
+  <script>  
+    sort = new Tablesort(document.getElementById('tablePlaylist'),{
+      descending: true
+    });
   </script>
 
     <script src="tablesort.min.js"></script>
