@@ -82,8 +82,12 @@
     id = $(`#${track_id}`).children().last().html();
     id = Number(id) - 1 
     $(`#${track_id}`).children().last().html(id)
-    $('#vote_feed').append(`<p>${user_name} disliked a song</p>`)
-    sort.refresh()
+    if (user_name == null) {
+      $('#vote_feed').append(`<p>A user disliked a song</p>`)
+    } else {
+      $('#vote_feed').append(`<p>${user_name} disliked a song</p>`)
+      sort.refresh()
+    }
   })
 
   socket.on('send names', function(name, id){
