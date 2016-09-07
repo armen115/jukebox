@@ -55,6 +55,11 @@ io.on('connection', function(socket){
     io.emit('broadcast track', track_id, track_title, artist)
   })
 
+  socket.on('delete track', function(track_id){
+    db.run("DELETE FROM songs WHERE track_id = ?", [track_id]);
+    console.log(`Song deleted: ID: ${track_id}`)
+  })
+
   socket.on('upvote', function(track_id){
     db.run("UPDATE songs SET votes = votes + 1 WHERE track_id = ?", [track_id], function(err, res){
     	if (err) {
@@ -65,6 +70,7 @@ io.on('connection', function(socket){
   })
 
   socket.on('downvote', function(track_id){
+    console.log(track_id)
     db.run("UPDATE songs SET votes = votes + 1 WHERE track_id = ?", [track_id], function(err, res){
 	  	if (err){
     		console.log('vote could not be processed')

@@ -1,9 +1,10 @@
 $(document).ready(function() {
  // Hide everything on page load
- $("#tableSearchResults, #search, #tablePlaylist").hide();
+  
+  $("#tableSearchResults, #search, #tablePlaylist").hide();
 
    // Load all songs from database on page load and build initial table 
-   $.getJSON({
+  $.getJSON({
     url: '/songs',
     success: function(response){
       response.forEach(function(json){
@@ -18,42 +19,43 @@ $(document).ready(function() {
     }
   });
 
- addTrackToPlaylist = function(e){
-   var track_title = e.getAttribute("data-track-title");
-   var track_id = e.getAttribute("data-track-id");
-   var artist = e.getAttribute("data-artist");
+  addTrackToPlaylist = function(e){
+    var track_title = e.getAttribute("data-track-title");
+    var track_id = e.getAttribute("data-track-id");
+    var artist = e.getAttribute("data-artist");
 
-   var $table = $('#tablePlaylist')[0];
-   
-   if ( !($table.rows['${track_id}']) ){
-     socket.emit('add track', track_id, track_title, artist); 
-     disableButton(e);
-   } else {
-     trackExisting(e);
-   }     
- }
+    var $row = $(`#tablePlaylist tr#${track_id}`);
+    console.log($row.length)
 
- disableButton = function(e) {
-   e.disabled = true;
-   e.innerHTML = "Added to playlist";
-   e.setAttribute("class", "btn btn-success btn-xs");
- }
+    if ($row.length == 0) {
+      socket.emit('add track', track_id, track_title, artist);
+      disableButton(e);
+    } else if ($row.length == 1) {
+      trackExisting(e);
+    } 
+  }
 
- trackExisting = function(e) {
-   e.innerHTML = "Track is already in the playlist! Vote for it!";
-   e.setAttribute("class", "btn btn-warning btn-xs");
- }
+  disableButton = function(e) {
+    e.disabled = true;
+    e.innerHTML = "Added to playlist";
+    e.setAttribute("class", "btn btn-success btn-xs");
+  }
 
- $('#tableSearchResults').on('click', '.addButton', function(){ 
-   addTrackToPlaylist(this);
- });
+  trackExisting = function(e) {
+    e.innerHTML = "Already in the playlist!";
+    e.setAttribute("class", "btn btn-warning btn-xs");
+  }
+
+  $('#tableSearchResults').on('click', '.addButton', function(e){ 
+    addTrackToPlaylist(this);
+  });
  
- displayResult = function(track) {
-   var artist = track.artist.name;
+  displayResult = function(track) {
+    var artist = track.artist.name;
 
-   var addPlaylistButton = `<button data-track-title='${track.title}' data-track-id=${track.id} data-artist='${artist}' class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
-   
-   var resultRow = `<tr id="${track.id}">
+    var addPlaylistButton = `<button data-track-title='${track.title}' data-track-id=${track.id} data-artist='${artist}' class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+
+    var resultRow = `<tr id="${track.id}">
                      <td class="text-center">${track.title}</td>
                      <td class="text-center">${artist}</<td>
                      <td class="text-center">
@@ -63,8 +65,8 @@ $(document).ready(function() {
                        </audio>
                      <td class="text-center">${addPlaylistButton}</td>
                     </tr>`;
-   $('#searchResults').append(resultRow);
- }
+    $('#searchResults').append(resultRow);
+  }
 
  displayTablePlaylist = function(){
    $("#tableSearchResults, #search").hide();
@@ -103,16 +105,25 @@ $(document).ready(function() {
     });
   }
 
-// Assign clicks for new songs added to playlist table
- $('#tablePlaylist').on('click', '.up', function(){
-     track_id = this.parentElement.parentElement.getAttribute('id')
-     socket.emit('upvote', track_id)
- });
+  $('#tablePlaylist').on('click', '.up', function(){
+    var track_id = this.parentElement.parentElement.getAttribute('id')
+    socket.emit('upvote', track_id)
+    this.disabled = true;
+  });
 
- $('#tablePlaylist').on('click', '.down', function(){
-     track_id = this.parentElement.parentElement.getAttribute('id')
-     socket.emit('downvote', track_id)  
- });
+  $('#tablePlaylist').on('click', '.down', function(){
+    
+    var track_id = this.parentElement.parentElement.getAttribute('id')
+
+    var currentVotes = $(`tr#${track_id} td:nth-child(3)`).text()
+
+    if (currentVotes > 0) { 
+      socket.emit('downvote', track_id)
+      this.disabled = true;
+    } else if (currentVotes == 0) {
+      this.disabled = true;
+    }  
+  });
 
  $('#mainSearchTab').on('click', searchForTracks)
  $('#mainVoteTab').on('click', displayTablePlaylist)

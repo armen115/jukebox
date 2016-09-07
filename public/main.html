@@ -77,10 +77,6 @@
     sort.refresh()
   })
 
-  socket.on('fetch tracks', function(){
-    socket.emit('give tracks', mainPlaylistVariable)
-  })
-
   DZ.init({
     appId  : '190182',
     channelUrl : 'https://example@example.com',
@@ -99,12 +95,9 @@
       var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1").attr('id'))
       DZ.player.playTracks([track_id], function(){
         $(`#${track_id}`).remove();
+        socket.emit('delete track', track_id)
       });
-    })
-
-    DZ.Event.subscribe('current_track', function(track, evt_name){
-      console.log("Currently playing track", track);
-    });
+    })   
   }
 </script>
 <script src="tablesort.min.js"></script>
