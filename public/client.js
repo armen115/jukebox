@@ -61,6 +61,7 @@ $(document).ready(function() {
                          <source src="${track.preview}" type="audio/ogg">
                          <source src="${track.preview}" type="audio/mpeg">
                        </audio>
+                     </td>
                      <td class="text-center">${addPlaylistButton}</td>
                     </tr>`;
    $('#searchResults').append(resultRow);

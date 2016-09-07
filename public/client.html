@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="client.css">
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
  
   <body>
@@ -14,8 +15,8 @@
     </ul>
     <form id="nickname_form">
       <label>Nickname:</label>
-      <input id="nickname" type="text">
-      <button>Submit</button>
+      <input id="nickname" type="text" class="form-control">
+      <button class="btn btn-primary" id="nickname_submit">Submit</button>
     </form>
   <!--   <form id="message_form">
       <label>Message: </label>
@@ -37,7 +38,7 @@
       <input id="search" placeholder="Search for Tracks" class="center-block"></input>
     </div>
 
-    <table id="tablePlaylist" class="table table-striped col-md-12">
+    <table id="tablePlaylist" class="table table-striped table-sm">
       <thead>
         <tr>
           <th class="text-center">Track Name</th>
@@ -55,8 +56,8 @@
         <tr>
           <th class="text-center">Track Name</th>
           <th class="text-center">Artist</th>
-          <th class="text-center">Preview</th>
-          <th class="text-center"></th>  
+<!--           <th class="text-center">Preview</th>
+ -->          <th class="text-center"></th>  
         </tr>
       </thead>
       <tbody id="searchResults">
