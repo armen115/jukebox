@@ -48,7 +48,7 @@
       </thead>
       <tbody id="playlist">
       </tbody>
-    </table>	
+    </table>  
 
     <table id="tableSearchResults" class="table table-striped col-md-12">
       <thead>
@@ -64,6 +64,7 @@
     </table>
     <div id="users">Current users: </div>
   </div>
+    
   <script src='/socket.io/socket.io.js'></script> 
   <script src='client.js'></script>  
 
@@ -94,27 +95,32 @@
       $('#playlist').append(playlistRow);
     })
 
-    socket.on('increase votes', function(track_id){
+    socket.on('increase votes', function(user_name, track_id){
       id = $(`#${track_id}`).children().last().prev().html();
       id = Number(id) + 1 
       $(`#${track_id}`).children().last().prev().html(id);
+      sort.refresh()
+      // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
 
-    socket.on('decrease votes', function(track_id){
+    socket.on('decrease votes', function(user_name, track_id){
       id = $(`#${track_id}`).children().last().prev().html();
       id = Number(id) - 1 
       $(`#${track_id}`).children().last().prev().html(id);
+      sort.refresh()
+      // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
       
 
   </script>
-  <script src="tablesort.min.js"></script>
-  <script src='tablesort.number.js'></script>
-  <script>  
-    sort = new Tablesort(document.getElementById('tablePlaylist'),{
-      descending: true
-    });
-  </script>
+
+    <script src="tablesort.min.js"></script>
+    <script src='tablesort.number.js'></script>
+    <script>  
+      sort = new Tablesort(document.getElementById('tablePlaylist'),{
+        descending: true
+      });
+    </script>
   </body>
 </html>
 
