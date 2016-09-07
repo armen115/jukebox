@@ -111,31 +111,11 @@ $(document).ready(function() {
 
  $('#tablePlaylist').on('click', '.down', function(){
      track_id = this.parentElement.parentElement.getAttribute('id')
-     socket.emit('downvote', track_id)  
+     socket.emit('downvote', track_id)
  });
 
  $('#mainSearchTab').on('click', searchForTracks)
  $('#mainVoteTab').on('click', displayTablePlaylist)
-
-  // Add tracks from tracksArray on page load
- socket.emit('need tracks')
- socket.on('give tracks', function(tracksArray){
-  // console.log(tracksArray)
-  // tracksArray.forEach(function(item){
-    // track_id = item[0]
-    // track_name = item[1]
-    // track_artist = item[2]
-    // track_votes = item[4]
-    // var playlistRow = `<tr id="track_id">
-    //              <td class="text-center">${track_name}</td>
-    //              <td class="text-center">${track_artist}</<td>
-    //              <td class="text-center"></td>
-    //              <td><button class="btn btn-primary up">Vote up</button><button class="btn btn-warning down">Vote down</button></td>
-    //              </tr>`;
-    $('#tablePlaylist').append(playlistRow);
-    console.log(playlistRow)
-  // })
- })
 
 
 });

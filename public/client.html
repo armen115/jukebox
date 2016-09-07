@@ -48,7 +48,7 @@
       </thead>
       <tbody id="playlist">
       </tbody>
-    </table>	
+    </table>  
 
     <table id="tableSearchResults" class="table table-striped col-md-12">
       <thead>
@@ -62,19 +62,28 @@
       <tbody id="searchResults">
       </tbody>
     </table>
-    <p id="users">Current users: </p>
+    <div id="users">Current users: </div>
   </div>
+    
   <script src='/socket.io/socket.io.js'></script> 
   <script src='client.js'></script>  
 
   <script>
     var socket = io();
     $('#nickname_form').submit(function(){
-      socket.emit('name submit', $('#nickname').val());
+      socket.emit('name submit', $('#nickname').val(), socket.id);
       $('#nickname_form').hide();
       $('#message_form').show();
       return false;
-    })    
+    })
+
+    socket.on('send names', function(name, id){
+      $('#users').append(`<p data-id=${id}>${name} </p>`)
+    })
+
+    socket.on('delete name', function(name, id){
+      $(`p[data-id=${id}`).remove();
+    })
 
     socket.on('broadcast track', function(track_id, track_title, artist){
       var playlistRow = `<tr id="${track_id}">
@@ -86,29 +95,32 @@
       $('#playlist').append(playlistRow);
     })
 
-    socket.on('increase votes', function(track_id){
+    socket.on('increase votes', function(user_name, track_id){
       id = $(`#${track_id}`).children().last().prev().html();
       id = Number(id) + 1 
       $(`#${track_id}`).children().last().prev().html(id);
+      sort.refresh()
+      // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
 
-    socket.on('decrease votes', function(track_id){
+    socket.on('decrease votes', function(user_name, track_id){
       id = $(`#${track_id}`).children().last().prev().html();
       id = Number(id) - 1 
       $(`#${track_id}`).children().last().prev().html(id);
+      sort.refresh()
+      // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
       
-    socket.on('name submit', function(name){
-      $('#users').append(name + '');
-    })
+
   </script>
-  <script src="tablesort.min.js"></script>
-  <script src='tablesort.number.js'></script>
-  <script>  
-    sort = new Tablesort(document.getElementById('tablePlaylist'),{
-      descending: true
-    });
-  </script>
+
+    <script src="tablesort.min.js"></script>
+    <script src='tablesort.number.js'></script>
+    <script>  
+      sort = new Tablesort(document.getElementById('tablePlaylist'),{
+        descending: true
+      });
+    </script>
   </body>
 </html>
 

@@ -37,16 +37,40 @@ app.get('/songs', function(req, res){
 	})
 })
 
+
+// Store objects of current users in this array
+currentUsers = []
+
 io.on('connection', function(socket){
 	console.log('A user has connected')
 	
+	function getUserInfo() {
+		var name, id;
+		for(var i = 0; i < currentUsers.length; i++ ) {
+			if (socket.id.replace('/#','') == currentUsers[i]['id']) {
+				name = currentUsers[i]['name'],
+				id = currentUsers[i]['id']
+			}
+		}
+		return {
+			name: name,
+			id: id
+		}
+	}
+
 	socket.on('disconnect', function(){
-		console.log('user disconnected')
+		var user = getUserInfo();
+		console.log(user.name + ' disconnected')
+		io.emit('delete name', user.name, user.id)
 	})
 
-	socket.on('name submit', function(name){
+	socket.on('name submit', function(name, id){
+		var obj = {	name: name,
+								id: id
+							}
+		currentUsers.push(obj)
 		console.log(name + ' has joined');
-		io.emit('name submit', name)
+		io.emit('send names', name, id)
 	})
 
   socket.on('add track', function(track_id, track_title, artist){
@@ -61,7 +85,8 @@ io.on('connection', function(socket){
     		console.log('vote could not be processed')
     	}
     });
-  	io.emit('increase votes', track_id)
+    var user = getUserInfo();
+  	io.emit('increase votes', user.name, track_id)
   })
 
   socket.on('downvote', function(track_id){
@@ -70,7 +95,9 @@ io.on('connection', function(socket){
     		console.log('vote could not be processed')
 	  	}
   	})
-  	io.emit('decrease votes', track_id)
+  	var user = getUserInfo();
+  	console.log(user.name)
+  	io.emit('decrease votes', user.name, track_id)
 	})
 
 })
