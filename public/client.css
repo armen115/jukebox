@@ -1,3 +1,7 @@
+audio {
+	width: 74%;
+}
+
 #message_form {
 	display: none;
 }
@@ -15,3 +19,13 @@ td {
 .headline, #nickname_form, #users {
 	text-align: center;
 }
+
+table {
+	width: 100%;
+	table-layout: fixed;
+}
+
+#nickname_submit {
+	margin: 7px;
+}
+
