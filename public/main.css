@@ -49,3 +49,7 @@ td {
 hr {
 	border-top: 1px solid #bdbdbd;
 }
+
+#users > p {
+	display: inline;
+}

@@ -115,9 +115,10 @@
       $('#users').append(name + '');
     })
 
-    socket.on('delete track', function(track_id){
-      
+    socket.on('remove trackFromPlaylist', function(track_id){
+      $(`#tablePlaylist tr#${track_id}`).remove();
     })
+
   </script>
   <script src="tablesort.min.js"></script>
   <script src='tablesort.number.js'></script>
