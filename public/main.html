@@ -14,6 +14,9 @@
       <div class="container" id="main">
         <img id="mic" src="/images/mic.png">
 
+        <div>
+          <span id="currentTrack"></span>
+        </div>
         <div id="dz-root"></div>
         <div id="player" align="center"></div>
 
@@ -28,32 +31,35 @@
           <tbody id="mainPlaylistRow">
           </tbody>
         </table>
-        <div id="users">Current users: </div>
+        <h5>Current users:</h5>
+        <div id="users"></div>
         <hr>
-        <div id="vote_feed"></div>
+        <div id="activity_feed">
+          <p></p>
+        </div>
       </div>
-  </div>
-<script>
-  // Load all songs from database on page load and build initial table 
-  $(document).ready(function(){
-     $.getJSON({
+    </div>
+  <script>
+    // Load all songs from database on page load and build initial table 
+    $(document).ready(function(){
+      $.getJSON({
       url: '/songs',
-      success: function(response){
-        response.forEach(function(json){
-          var row = `<tr id="${json.track_id}">
-                     <td class="text-center">${json.track_name}</td>
-                     <td class="text-center">${json.track_artist}</<td>
-                     <td class="text-center">${json.votes}</td>
-                     </tr>`;
-          $('#mainPlaylistRow').append(row)
-        })
-      sort.refresh()
-      }
-    });
-  })
-</script>
+        success: function(response){
+          response.forEach(function(json){
+            var row = `<tr id="${json.track_id}">
+                       <td class="text-center">${json.track_name}</td>
+                       <td class="text-center">${json.track_artist}</<td>
+                       <td class="text-center">${json.votes}</td>
+                       </tr>`;
+            $('#mainPlaylistRow').append(row)
+          })
+          sort.refresh()
+        }
+      });
+    })
+  </script>
+  
 <script src='/socket.io/socket.io.js'></script> 
-<script></script>
 <script>
   var socket = io();
 
@@ -65,15 +71,16 @@
                </tr>`;
     $('#mainPlaylistRow').append(row)
   })
+ 
 
   socket.on('increase votes', function(user_name, track_id){
     id = $(`#${track_id}`).children().last().html();
     id = Number(id) + 1 
     $(`#${track_id}`).children().last().html(id)
     if (user_name == null) {
-      $('#vote_feed').append(`<p>A user liked a song</p>`)
+      $('#activity_feed > p').replaceWith(`<p>A user liked a song</p>`)
     } else {
-      $('#vote_feed').append(`<p>${user_name} liked a song</p>`)
+      $('#activity_feed > p').replaceWith(`<p>${user_name} liked a song</p>`)
       sort.refresh()
     }
   })
@@ -83,9 +90,9 @@
     id = Number(id) - 1 
     $(`#${track_id}`).children().last().html(id)
     if (user_name == null) {
-      $('#vote_feed').append(`<p>A user disliked a song</p>`)
+      $('#activity_feed > p').replaceWith(`<p>A user disliked a song</p>`)
     } else {
-      $('#vote_feed').append(`<p>${user_name} disliked a song</p>`)
+      $('#activity_feed > p').replaceWith(`<p>${user_name} disliked a song</p>`)
       sort.refresh()
     }
   })
@@ -98,6 +105,10 @@
     $(`p[data-id=${id}`).remove();
   })
 
+  socket.on('remove track from playlist', function(track_id){
+    $(`#tablePlaylist tr#${track_id}`).remove();
+  })
+
   DZ.init({
     appId  : '190182',
     channelUrl : 'https://example@example.com',
@@ -108,28 +119,40 @@
       onload : onPlayerLoaded
     }
   });
-
-  function onPlayerLoaded() {
-    DZ.player.playTracks([15246481]);
-
-    DZ.Event.subscribe('track_end', function(){
-      var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1").attr('id'))
-      DZ.player.playTracks([track_id], function(){
-        $(`#${track_id}`).remove();
-        socket.emit('delete track', track_id)
-      });
-    })   
+  
+  function startPlayer(track_id){
+    DZ.player.playTracks([track_id], function(){
+      $(`#${track_id}`).remove();
+      socket.emit('delete track', track_id)
+    });  
   }
 
-</script>
-<script src="tablesort.min.js"></script>
-<script src="tablesort.number.js"></script>
-<script>
-  sort = new Tablesort(document.getElementById('mainPlaylist'), {
-    descending: true
-  });
-</script>
-</body>
+  function onPlayerLoaded() {
+    $("#mic").click(function(){
+      var start_track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'));
+      startPlayer(start_track_id);          
+    })
+
+    DZ.Event.subscribe('track_end', function(){
+      var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'))
+      startPlayer(track_id); 
+    })   
+
+    DZ.Event.subscribe('current_track', function(track){
+      var current = `<h3 id="currentTrack">${track.track.title} <small class="text-muted">By ${track.track.artist.name}</small></h3>`
+      $("#currentTrack").replaceWith(current);
+    });
+  }
+
+  </script>
+  <script src="tablesort.min.js"></script>
+  <script src="tablesort.number.js"></script>
+  <script>
+    sort = new Tablesort(document.getElementById('mainPlaylist'), {
+      descending: true
+    });
+  </script>
+  </body>
 </html>
 
 

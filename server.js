@@ -82,6 +82,8 @@ io.on('connection', function(socket){
   socket.on('delete track', function(track_id){
     db.run("DELETE FROM songs WHERE track_id = ?", [track_id]);
     console.log(`Song deleted: ID: ${track_id}`)
+    io.emit('remove trackFromPlaylist', track_id)
+    io.emit('refresh button', track_id)
   })
 
   socket.on('upvote', function(track_id){

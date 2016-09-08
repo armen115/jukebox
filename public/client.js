@@ -25,7 +25,6 @@ $(document).ready(function() {
     var artist = e.getAttribute("data-artist");
 
     var $row = $(`#tablePlaylist tr#${track_id}`);
-    console.log($row.length)
 
     if ($row.length == 0) {
       socket.emit('add track', track_id, track_title, artist);
@@ -69,11 +68,11 @@ $(document).ready(function() {
     $('#searchResults').append(resultRow);
   }
 
- displayTablePlaylist = function(){
+  displayTablePlaylist = function(){
    $("#tableSearchResults, #search").hide();
    $("#tablePlaylist").show();
    sort.refresh()
- }
+  }
 
   searchForTracks = function(){
 
@@ -124,8 +123,16 @@ $(document).ready(function() {
     }  
   });
 
- $('#mainSearchTab').on('click', searchForTracks)
- $('#mainVoteTab').on('click', displayTablePlaylist)
+  socket.on('refresh button', function(track_id){
+    let $buttonToBeRefreshed = $(`#${track_id} button`);
+    $buttonToBeRefreshed.prop('disabled', false);
+    $buttonToBeRefreshed.removeClass();
+    $buttonToBeRefreshed.addClass('btn btn-danger btn-xs addButton').html("Add to Playlist");
+  })
+
+  $('#mainSearchTab').on('click', searchForTracks)
+  $('#mainVoteTab').on('click', displayTablePlaylist)
 
 
 });
+
