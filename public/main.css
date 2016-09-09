@@ -29,6 +29,10 @@ body {
 	animation: growShake 1s infinite;
 }
 
+/*#wrapper {
+	
+}*/
+
 #main {
 	margin: 35px auto;
 	text-align: center;

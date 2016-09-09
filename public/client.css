@@ -29,3 +29,25 @@ table {
 	margin: 7px;
 }
 
+#welcome_h1 {
+	text-align: center;
+}
+
+#uploadForm {
+	margin-top: 30px;
+}
+
+#pictureDiv {
+	text-align: center;
+}
+
+#picture_select {
+}
+
+#picture_select_label {
+	
+}
+#picture_select_submit {
+	margin: 0 auto;
+	display: block;
+}

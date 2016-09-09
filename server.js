@@ -8,15 +8,23 @@ var file = "hello.db";
 var exists = fs.existsSync(file);
 var sqlite3 = require('sqlite3').verbose();
 
+var mime = require('mime')
+var multer = require('multer')
+var storage = multer.diskStorage({
+	destination: function(req, file, callback){
+		callback(null, './public/uploads');
+	},
+	filename: function(req, file, callback){
+		callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype))
+	}
+})
+var upload = multer({ storage: storage }).single('userPhoto')
 var db = new sqlite3.Database(file);
-
 db.serialize(function() {
   if(!exists) {
     db.run("CREATE TABLE songs (track_id STRING, track_name STRING, track_artist STRING, votes INTEGER)");
   }
 });
-
-// tracksArray = []
 
 // Load all files the public folder
 app.use(express.static('public'))
@@ -27,6 +35,16 @@ app.get('/', function(req, res){
 	res.sendFile(__dirname + '/public/client.html');
 });
 
+app.post('/uploads', function(req, res){
+	upload(req, res, function(err){
+		if (err){
+			return res.end('Error uploading file.')
+		}
+		res.sendStatus(200)
+		io.emit("picture upload", req["file"]["filename"])
+	})	
+})
+
 app.get('/admin', function(req, res){
 	res.sendFile(__dirname + '/public/main.html')
 })
@@ -35,6 +53,10 @@ app.get('/songs', function(req, res){
   var dbMusic = db.all("SELECT * FROM songs", function(err, rows){
 	  res.json(rows)
 	})
+})
+
+app.get('/setup', function(req, res){
+	res.sendFile(__dirname + '/public/setup.html')
 })
 
 

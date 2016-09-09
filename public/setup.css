@@ -1,0 +1,35 @@
+body { 
+  background: url(images/bg3.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#main {
+	margin: 75px auto;
+	text-align: center;
+	width: 50%;
+	border: 1px solid #bbb;
+	padding: 18px;
+	background-color: #f1f1f1;
+}
+
+#uploadForm {
+/*	margin-top: 30px;
+*/}
+
+#pictureDiv {
+	text-align: center;
+}
+
+#picture_select {
+}
+
+#picture_select_label {
+	
+}
+#picture_select_submit {
+	margin: 0 auto;
+	display: block;
+}
