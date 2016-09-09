@@ -122,7 +122,7 @@ $(document).ready(function() {
       this.disabled = true;
     } else if (currentVotes == 0) {
       this.disabled = true;
-    }  
+     }  
   });
 
   socket.on('refresh button', function(track_id){

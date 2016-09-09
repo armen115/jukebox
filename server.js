@@ -97,7 +97,7 @@ io.on('connection', function(socket){
 
   socket.on('downvote', function(track_id){
     console.log(track_id)
-    db.run("UPDATE songs SET votes = votes + 1 WHERE track_id = ?", [track_id], function(err, res){
+    db.run("UPDATE songs SET votes = votes - 1 WHERE track_id = ?", [track_id], function(err, res){
 	  	if (err){
     		console.log('vote could not be processed')
 	  	}
