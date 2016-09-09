@@ -57,8 +57,8 @@
         <tr>
           <th class="text-center">Track Name</th>
           <th class="text-center">Artist</th>
-<!--           <th class="text-center">Preview</th>
- -->          <th class="text-center"></th>  
+          <th class="text-center">Preview</th>
+          <th class="text-center"></th>  
         </tr>
       </thead>
       <tbody id="searchResults">
@@ -115,11 +115,7 @@
       sort.refresh()
       // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
-      
-    // socket.on('name submit', function(name){
-    //   $('#users').append(name + '');
-    // })
-
+    
     socket.on('remove trackFromPlaylist', function(track_id){
       $(`#tablePlaylist tr#${track_id}`).remove();
     })
