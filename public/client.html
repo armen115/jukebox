@@ -9,6 +9,7 @@
  
   <body>
   <div class="container">
+
     <h1 class="headline">Jukebox</h1>
     <ul id="chat_area">
       
@@ -63,7 +64,10 @@
       <tbody id="searchResults">
       </tbody>
     </table>
-    <div id="users">Current users: </div>
+    <hr>
+    <h5 class="text-center">Current users:</h5>
+    <div id="users"></div>
+
   </div>
     
   <script src='/socket.io/socket.io.js'></script> 
@@ -83,14 +87,14 @@
     })
 
     socket.on('delete name', function(name, id){
-      $(`p[data-id=${id}`).remove();
+      $(`p[data-id=${id}]`).remove();
     })
 
     socket.on('broadcast track', function(track_id, track_title, artist){
       var playlistRow = `<tr id="${track_id}">
                          <td class="text-center">${track_title}</td>
                          <td class="text-center">${artist}</<td>
-                         <td class="text-center">0</td>
+                         <td class="text-center"></td>
                          <td><button class="btn btn-primary up">Vote up</button><button class="btn btn-warning down">Vote down</button></td>
                          </tr>`;
       $('#playlist').append(playlistRow);
@@ -112,9 +116,9 @@
       // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
       
-    socket.on('name submit', function(name){
-      $('#users').append(name + '');
-    })
+    // socket.on('name submit', function(name){
+    //   $('#users').append(name + '');
+    // })
 
     socket.on('remove trackFromPlaylist', function(track_id){
       $(`#tablePlaylist tr#${track_id}`).remove();
@@ -127,15 +131,7 @@
     sort = new Tablesort(document.getElementById('tablePlaylist'),{
       descending: true
     });
-  </script>
-
-    <script src="tablesort.min.js"></script>
-    <script src='tablesort.number.js'></script>
-    <script>  
-      sort = new Tablesort(document.getElementById('tablePlaylist'),{
-        descending: true
-      });
-    </script>
+  </script> 
   </body>
 </html>
 

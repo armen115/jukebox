@@ -29,3 +29,34 @@ table {
 	margin: 7px;
 }
 
+#users > p {
+	display: inline;
+}
+
+#audioplayer{
+  width: 30px;
+  height: 30px;
+  margin: 50px auto auto auto;
+}
+
+#pButton{
+  height:25px;
+  width: 25px;
+  border: none;
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  outline:none;
+}
+
+.play{
+  background: url('http://www.alexkatz.me/codepen/images/play.png');
+}
+
+.pause{
+  background: url('http://www.alexkatz.me/codepen/images/pause.png');
+}
+
+
+
+

@@ -37,7 +37,6 @@ app.get('/songs', function(req, res){
 	})
 })
 
-
 // Store objects of current users in this array
 currentUsers = []
 

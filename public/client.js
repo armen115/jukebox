@@ -23,7 +23,7 @@ $(document).ready(function() {
     var track_title = e.getAttribute("data-track-title");
     var track_id = e.getAttribute("data-track-id");
     var artist = e.getAttribute("data-artist");
-
+  
     var $row = $(`#tablePlaylist tr#${track_id}`);
 
     if ($row.length == 0) {
@@ -48,23 +48,25 @@ $(document).ready(function() {
   $('#tableSearchResults').on('click', '.addButton', function(e){ 
     addTrackToPlaylist(this);
   });
- 
+
   displayResult = function(track) {
     var artist = track.artist.name;
 
-    var addPlaylistButton = `<button data-track-title='${track.title}' data-track-id=${track.id} data-artist='${artist}' class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
-
+    var addPlaylistButton = `<button data-track-title='${track.title_short}' data-track-id=${track.id} data-artist='${artist}' class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+    
     var resultRow = `<tr id="${track.id}">
                      <td class="text-center">${track.title}</td>
                      <td class="text-center">${artist}</<td>
                      <td class="text-center">
-                       <audio controls>
-                         <source src="${track.preview}" type="audio/ogg">
-                         <source src="${track.preview}" type="audio/mpeg">
+                       <button track=${track.id} class="play" id="pButton"></button>
+                       <audio id="music" track=${track.id} controls="controls" style="visibility: hidden;width: 1px;height: 1px;">
+                        <source src="${track.preview}" type="audio/ogg">
+                        <source src="${track.preview}" type="audio/mpeg">
                        </audio>
                      </td>
                      <td class="text-center">${addPlaylistButton}</td>
-                    </tr>`;
+                     </tr>`;
+
     $('#searchResults').append(resultRow);
   }
 
@@ -124,7 +126,7 @@ $(document).ready(function() {
   });
 
   socket.on('refresh button', function(track_id){
-    let $buttonToBeRefreshed = $(`#${track_id} button`);
+    let $buttonToBeRefreshed = $(`#${track_id} td:nth-child(4) > button`);
     $buttonToBeRefreshed.prop('disabled', false);
     $buttonToBeRefreshed.removeClass();
     $buttonToBeRefreshed.addClass('btn btn-danger btn-xs addButton').html("Add to Playlist");
@@ -133,6 +135,28 @@ $(document).ready(function() {
   $('#mainSearchTab').on('click', searchForTracks)
   $('#mainVoteTab').on('click', displayTablePlaylist)
 
+  $('#tableSearchResults').on('click', '#pButton', function(){
+    playAudio(this);
+  });
+
+  playAudio = function(e){
+    var trackNum = e.getAttribute('track');
+    var audio = document.querySelector(`audio[track='${trackNum}']`);
+    var pButton = document.querySelector(`button[track='${trackNum}']`);
+
+    // start music
+    if (audio.paused) {
+      audio.play(e);
+      // remove play, add pause
+      pButton.className = "";
+      pButton.className = "pause";
+    } else { // pause music
+      audio.pause(e);
+      // remove pause, add play
+      pButton.className = "";
+      pButton.className = "play";
+    }
+  }
 
 });
 
