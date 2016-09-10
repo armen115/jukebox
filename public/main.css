@@ -19,6 +19,24 @@ body {
 	}
 }
 
+/*current track pulsing animation*/
+@-webkit-keyframes pulse {
+  from {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    -webkit-transform: scale3d(1.05, 1.05, 1.05);
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+
+  to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
 #mic {
 	position: relative;
 	top: -65px;
@@ -26,7 +44,7 @@ body {
 	border-radius: 50%;
 	background-color: #e0e0e0;
 	border: 1px solid #aaa;
-	animation: growShake 1s infinite;
+	/*animation: growShake 1s infinite;*/
 }
 
 #main {
@@ -36,10 +54,6 @@ body {
 	border: 1px solid #bbb;
 	padding: 18px;
 	background-color: #f1f1f1;
-}
-
-#spotifyPlayer {
-	width: 100%;
 }
 
 td {
@@ -53,3 +67,14 @@ hr {
 #users > p {
 	display: inline;
 }
+
+#dz-root {
+	display: none;
+}
+
+#currentTrack {
+	animation: pulse 1s infinite;
+}
+
+
+

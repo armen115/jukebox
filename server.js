@@ -42,6 +42,7 @@ currentUsers = []
 
 io.on('connection', function(socket){
 	console.log('A user has connected')
+  io.emit('user connected', null)
 	
 	function getUserInfo() {
 		var name, id;
@@ -75,7 +76,8 @@ io.on('connection', function(socket){
   socket.on('add track', function(track_id, track_title, artist){
     db.run("INSERT INTO songs VALUES (?, ?, ?, ?)", [track_id, track_title, artist, 0]);
     console.log(`Song added: ID: ${track_id}, NAME: ${track_title}, ARTIST: ${artist}`)
-    io.emit('broadcast track', track_id, track_title, artist)
+    var user = getUserInfo();
+    io.emit('broadcast track', user.name, track_id, track_title, artist)
   })
 
   socket.on('delete track', function(track_id){
@@ -85,17 +87,17 @@ io.on('connection', function(socket){
     io.emit('refresh button', track_id)
   })
 
-  socket.on('upvote', function(track_id){
+  socket.on('upvote', function(track_id, track_name, artist){
     db.run("UPDATE songs SET votes = votes + 1 WHERE track_id = ?", [track_id], function(err, res){
     	if (err) {
     		console.log('vote could not be processed')
     	}
     });
     var user = getUserInfo();
-  	io.emit('increase votes', user.name, track_id)
+  	io.emit('increase votes', user.name, track_id, track_name, artist)
   })
 
-  socket.on('downvote', function(track_id){
+  socket.on('downvote', function(track_id, track_name, artist){
     console.log(track_id)
     db.run("UPDATE songs SET votes = votes - 1 WHERE track_id = ?", [track_id], function(err, res){
 	  	if (err){
@@ -104,7 +106,7 @@ io.on('connection', function(socket){
   	})
   	var user = getUserInfo();
   	console.log(user.name)
-  	io.emit('decrease votes', user.name, track_id)
+  	io.emit('decrease votes', user.name, track_id, track_name, artist)
 	})
 
 })

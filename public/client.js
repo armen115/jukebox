@@ -109,16 +109,21 @@ $(document).ready(function() {
 
   $('#tablePlaylist').on('click', '.up', function(){
     var track_id = this.parentElement.parentElement.getAttribute('id')
-    socket.emit('upvote', track_id)
+    var track_name = $(`tr#${track_id} td:nth-child(1)`).text()
+    var artist = $(`tr#${track_id} td:nth-child(2)`).text()
+
+    socket.emit('upvote', track_id, track_name, artist)
     this.disabled = true;
   });
 
   $('#tablePlaylist').on('click', '.down', function(){    
     var track_id = this.parentElement.parentElement.getAttribute('id')
+    var track_name = $(`tr#${track_id} td:nth-child(1)`).text()
+    var artist = $(`tr#${track_id} td:nth-child(2)`).text()
     var currentVotes = $(`tr#${track_id} td:nth-child(3)`).text()
 
     if (currentVotes > 0) { 
-      socket.emit('downvote', track_id)
+      socket.emit('downvote', track_id, track_name, artist)
       this.disabled = true;
     } else if (currentVotes == 0) {
       this.disabled = true;
