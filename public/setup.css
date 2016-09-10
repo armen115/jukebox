@@ -1,13 +1,18 @@
+html {
+
+}
+
 body { 
   background: url(images/bg3.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  height: 100%;
 }
 
 #main {
-	margin: 75px auto;
+	margin: 75px;
 	text-align: center;
 	width: 50%;
 	border: 1px solid #bbb;
@@ -29,6 +34,7 @@ body {
 #picture_select_label {
 	
 }
+
 #picture_select_submit {
 	margin: 0 auto;
 	display: block;

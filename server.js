@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
+var path = require('path')
 var fs = require("fs");
 var file = "hello.db";
 var exists = fs.existsSync(file);
@@ -18,7 +18,7 @@ var storage = multer.diskStorage({
 		callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype))
 	}
 })
-var upload = multer({ storage: storage }).single('userPhoto')
+var upload = multer({ storage: storage },{limits: {}}).single('userPhoto')
 var db = new sqlite3.Database(file);
 db.serialize(function() {
   if(!exists) {
@@ -41,7 +41,7 @@ app.post('/uploads', function(req, res){
 			return res.end('Error uploading file.')
 		}
 		res.sendStatus(200)
-		io.emit("picture upload", req["file"]["filename"])
+		io.emit("picture upload", req["file"]["filename"], req["file"]["filename"].replace(/\.[^/.]+$/, ""))
 	})	
 })
 

@@ -1,14 +1,24 @@
+/*html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}*/
+
 body { 
   background: url(/images/bg3.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
-#header-div {
-	height: 100px;
+#wrapper {
+	width: 100%;
 }
+
 
 @keyframes growShake {
 	from {
@@ -29,21 +39,19 @@ body {
 	animation: growShake 1s infinite;
 }
 
-/*#wrapper {
-	
-}*/
-
 #main {
-	margin: 35px auto;
+	margin-top: 60px;
 	text-align: center;
-	width: 75%;
 	border: 1px solid #bbb;
 	padding: 18px;
 	background-color: #f1f1f1;
 }
 
-#spotifyPlayer {
-	width: 100%;
+#bottom_section {
+	position: fixed;
+  width: 100%;
+  left: 0;
+  height: 100%
 }
 
 td {

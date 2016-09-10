@@ -150,10 +150,11 @@ $(document).ready(function() {
       processData: false,
       contentType: false,
       success: function(data){
-        alert('Complete!')
+        console.log('Upload complete!')
       }
     });
   }
  });
+
 
 });

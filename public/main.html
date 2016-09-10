@@ -8,30 +8,38 @@
   </head>
  
   <body>
-    <div class="container" id="wrapper">
-    <div class="container" id="header-div">
-    </div>
-      <div class="container" id="main">
-        <img id="mic" src="/images/mic.png">
+  <div id="wrapper" class="container">
+    <div class="row">
+     <div id="section_left" class="col-md-4"></div>
 
-        <div id="dz-root"></div>
-        <div id="player" align="center"></div>
+        <div class="container col-md-4" id="main">
+          <img id="mic" src="/images/mic.png">
 
-        <table id="mainPlaylist" class="table table-striped col-md-12" >
-          <thead>
-            <tr>
-              <th class="text-center">Track Name</th>
-              <th class="text-center">Artist</th>
-              <th class="text-center sort-default">Votes</th>  
-            </tr>
-          </thead>
-          <tbody id="mainPlaylistRow">
-          </tbody>
-        </table>
-        <div id="users">Current users: </div>
-        <hr>
-        <div id="vote_feed"></div>
+          <div id="dz-root"></div>
+          <div id="player" align="center"></div>
+
+          <table id="mainPlaylist" class="table table-striped col-md-12" >
+            <thead>
+              <tr>
+                <th class="text-center">Track Name</th>
+                <th class="text-center">Artist</th>
+                <th class="text-center sort-default">Votes</th>  
+              </tr>
+            </thead>
+            <tbody id="mainPlaylistRow">
+            </tbody>
+          </table>
+          <div id="users">Current users: </div>
+          <hr>
+          <div id="vote_feed"></div>
       </div>
+
+      <div id="section_right" class="col-md-4"></div>
+    </div>
+
+    <div id="bottom_section">
+    <h1>Bottom</h1>
+    </div>
   </div>
 <script>
   // Load all songs from database on page load and build initial table 
@@ -98,8 +106,45 @@
     $(`p[data-id=${id}`).remove();
   })
 
-  socket.on('picture upload', function(picture){
-    $('#wrapper').append(`<img src="/uploads/${picture}">`)
+  var counter = 1
+  socket.on('picture upload', function(picture, filename){
+    // Create random numbers between 0 and the width/height
+    // Set inital left and top positions
+    var width = 200
+    var height = 300
+    // var posX = Math.floor(Math.random()*(width - width))
+    // var posY = Math.floor(Math.random()*(body.height - height))
+
+    if ( counter % 3 == 0 ) {
+      $('#section_left').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+      var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
+      var posX = Math.floor(Math.random()*(parentElement.width - width))
+      var posY = Math.floor(Math.random()*(parentElement.height - height))
+    } 
+    else if ( counter % 2 == 0 ) {
+      $('#section_right').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+      var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
+      var posX = Math.floor(Math.random()*(parentElement.width - width))
+      var posY = Math.floor(Math.random()*(parentElement.height - height))
+    } 
+    else if ( counter % 1 == 0 ) {
+      $('#bottom_section').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+      var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
+      var posX = Math.floor(Math.random()*(parentElement.width - width))
+      var posY = Math.floor(Math.random()*(parentElement.height - height))
+    }
+    counter++
+    console.log(counter)
+    $(`#${filename}`).css({ 'position': 'relative', 'left': posX, 'top': posY })
+    
+    // while (   !((posY  + height) < mainBounds.top && posY > mainBounds.bottom)  ) {
+    //   posY = Math.floor(Math.random()*(body.height - height))
+    // }
+
+    // while (   !((posX  + width) < mainBounds.left && posX > mainBounds.right)  ) {
+    //   posX = Math.floor(Math.random()*(body.width - width))
+    // }
+
   })
 
   DZ.init({
@@ -114,7 +159,7 @@
   });
 
   function onPlayerLoaded() {
-    DZ.player.playTracks([15246481]);
+    // DZ.player.playTracks([15246481]);
 
     DZ.Event.subscribe('track_end', function(){
       var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1").attr('id'))
@@ -137,3 +182,17 @@
 </html>
 
 
+<!--     var width = 200
+    var height = 300
+    
+    var posX = Math.floor(Math.random()*(bodyWidth.width - width))
+    var posY = Math.floor(Math.random()*(bodyHeight.height - height))
+
+    // Get main element, do calculation to prevent overlap
+    mainBounds = document.getElementById('main').getBoundingClientRect()
+    if ( ((posY  + height) < mainBounds.top) && (posY > mainBounds.bottom) ) {
+      posX = posX
+    } else {
+      
+    }
+ -->
