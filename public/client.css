@@ -57,6 +57,29 @@ table {
   background: url('http://www.alexkatz.me/codepen/images/pause.png');
 }
 
+#welcome_h1 {
+	text-align: center;
+}
 
+#uploadForm {
+	margin-top: 30px;
+}
 
+#pictureDiv {
+	text-align: center;
+}
 
+#picture_select {
+}
+
+#picture_select_label {
+	
+}
+#picture_select_submit {
+	margin: 0 auto;
+	display: block;
+}
+
+.table>thead>tr>th {
+	border-bottom: none;
+}

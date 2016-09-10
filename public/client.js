@@ -1,7 +1,7 @@
 $(document).ready(function() {
  // Hide everything on page load
   
-  $("#tableSearchResults, #search, #tablePlaylist").hide();
+  $("#tableSearchResults, #search, #tablePlaylist, #pictureDiv").hide();
 
    // Load all songs from database on page load and build initial table 
   $.getJSON({
@@ -73,13 +73,17 @@ $(document).ready(function() {
   displayTablePlaylist = function(){
    $("#tableSearchResults, #search").hide();
    $("#tablePlaylist").show();
+   $("#pictureDiv").hide()
+   $("#welcome_h1").hide()
    sort.refresh()
   }
 
   searchForTracks = function(){
 
-    $("#tableSearchResults, #search").show();
+    $("#tableSearchResults, #autocomplete, #search").show();
     $("#tablePlaylist").hide();
+    $("#pictureDiv").hide()
+    $("#welcome_h1").hide()
 
     $("#search").on("keyup", function(e) {
 
@@ -137,9 +141,6 @@ $(document).ready(function() {
     $buttonToBeRefreshed.addClass('btn btn-danger btn-xs addButton').html("Add to Playlist");
   })
 
-  $('#mainSearchTab').on('click', searchForTracks)
-  $('#mainVoteTab').on('click', displayTablePlaylist)
-
   $('#tableSearchResults').on('click', '#pButton', function(){
     playAudio(this);
   });
@@ -162,6 +163,35 @@ $(document).ready(function() {
       pButton.className = "play";
     }
   }
+
+
+  hideAll = function(){
+    $('#tablePlaylist, #tableSearchResults, #autocomplete, #users, #welcome_h1').hide()
+    $('#pictureDiv').show()
+  }
+
+ $('#mainSearchTab').on('click', searchForTracks)
+ $('#mainVoteTab').on('click', displayTablePlaylist)
+ $('#mainPictureTab').on('click', hideAll)
+
+ $('#uploadForm').submit(function(e) {
+  // $(this).hide()
+  e.preventDefault();
+  if ( $('#picture_select').get(0).files.length == 0) {
+    alert('file cant be empty')
+  } else {
+    $.ajax({
+      url: '/uploads',
+      type: 'POST',
+      data: new FormData( this ),
+      processData: false,
+      contentType: false,
+      success: function(data){
+        console.log('Upload complete!')
+      }
+    });
+  }
+ });
 
 });
 
