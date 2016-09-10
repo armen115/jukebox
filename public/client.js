@@ -1,6 +1,5 @@
 $(document).ready(function() {
- // Hide everything on page load
-  
+  // Hide everything on page load
   $("#tableSearchResults, #search, #tablePlaylist, #pictureDiv").hide();
 
    // Load all songs from database on page load and build initial table 
@@ -23,7 +22,7 @@ $(document).ready(function() {
     var track_title = e.getAttribute("data-track-title");
     var track_id = e.getAttribute("data-track-id");
     var artist = e.getAttribute("data-artist");
-  
+    
     var $row = $(`#tablePlaylist tr#${track_id}`);
 
     if ($row.length == 0) {
@@ -52,7 +51,7 @@ $(document).ready(function() {
   displayResult = function(track) {
     var artist = track.artist.name;
 
-    var addPlaylistButton = `<button data-track-title='${track.title_short}' data-track-id=${track.id} data-artist='${artist}' class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+    var addPlaylistButton = `<button data-track-title=${track.title_short} data-track-id=${track.id} data-artist='${artist}' class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
     
     var resultRow = `<tr id="${track.id}">
                      <td class="text-center">${track.title}</td>
@@ -163,7 +162,6 @@ $(document).ready(function() {
       pButton.className = "play";
     }
   }
-
 
   hideAll = function(){
     $('#tablePlaylist, #tableSearchResults, #autocomplete, #users, #welcome_h1').hide()

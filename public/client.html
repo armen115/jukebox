@@ -3,6 +3,7 @@
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="client.css">
+    <script src='/socket.io/socket.io.js'></script>  
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
@@ -19,13 +20,6 @@
       <input id="nickname" type="text" class="form-control">
       <button class="btn btn-primary" id="nickname_submit">Submit</button>
     </form>
-
-  <!--   <form id="message_form">
-      <label>Message: </label>
-      <input id="message" type="text">
-      <button>Submit</button>
-    </form> -->
-    
 
     <div class="btn-group btn-group-justified" role="group" aria-label="...">
       <div class="btn-group" role="group">
@@ -78,15 +72,12 @@
     </form>
     </div>
     
-    
   </div>
+
   <hr>
   <h5 class="text-center">Current users:</h5>
-    <div id="users"></div>
-    
-  <script src='/socket.io/socket.io.js'></script> 
-  <script src='client.js'></script>  
-
+  <div id="users"></div>
+</body>
   <script>
     var socket = io();
     $('#nickname_form').submit(function(){
@@ -104,7 +95,7 @@
       $(`p[data-id=${id}]`).remove();
     })
 
-    socket.on('broadcast track', function(track_id, track_title, artist){
+    socket.on('broadcast track', function(user_name, track_id, track_title, artist){
       var playlistRow = `<tr id="${track_id}">
                          <td class="text-center">${track_title}</td>
                          <td class="text-center">${artist}</<td>
@@ -119,7 +110,6 @@
       id = Number(id) + 1 
       $(`#${track_id}`).children().last().prev().html(id);
       sort.refresh()
-      // $('#users').append(`<p>${user_name} liked a song</p>`)f
     })
 
     socket.on('decrease votes', function(user_name, track_id){
@@ -127,7 +117,6 @@
       id = Number(id) - 1 
       $(`#${track_id}`).children().last().prev().html(id);
       sort.refresh()
-      // $('#users').append(`<p>${user_name} liked a song</p>`)
     })
 
     socket.on('remove trackFromPlaylist', function(track_id){
@@ -135,6 +124,7 @@
     })
 
   </script>
+  <script src='client.js'></script>  
   <script src="tablesort.min.js"></script>
   <script src='tablesort.number.js'></script>
   <script>  
@@ -142,7 +132,6 @@
       descending: true
     });
   </script> 
-  </body>
 </html>
 
 
