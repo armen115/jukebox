@@ -51,10 +51,10 @@ $(document).ready(function() {
   displayResult = function(track) {
     var artist = track.artist.name;
 
-    var addPlaylistButton = `<button data-track-title=${track.title_short} data-track-id=${track.id} data-artist='${artist}' class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
-    
+    var addPlaylistButton = `<button data-track-title="${track.title_short}" data-track-id=${track.id} data-artist="${artist}" class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+
     var resultRow = `<tr id="${track.id}">
-                     <td class="text-center">${track.title}</td>
+                     <td class="text-center">${track.title_short}</td>
                      <td class="text-center">${artist}</<td>
                      <td class="text-center">
                        <button track=${track.id} class="play" id="pButton"></button>
@@ -112,8 +112,8 @@ $(document).ready(function() {
 
   $('#tablePlaylist').on('click', '.up', function(){
     var track_id = this.parentElement.parentElement.getAttribute('id')
-    var track_name = $(`tr#${track_id} td:nth-child(1)`).text()
-    var artist = $(`tr#${track_id} td:nth-child(2)`).text()
+    var track_name = $(`tr#${track_id} td:nth-child(1)`).first().text()
+    var artist = $(`tr#${track_id} td:nth-child(2)`).first().text()
 
     socket.emit('upvote', track_id, track_name, artist)
     this.disabled = true;

@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="main.css">
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdns-files.dzcdn.net/js/min/dz-v00350607.js"></script>
+    <link rel="stylesheet" href="progress_bar.css">
+    <script type="text/javascript" src="http://cdn-files.deezer.com/js/min/dz.js"></script>
   </head>
  
   <body>
@@ -14,6 +16,10 @@
         <div class="container col-md-4" id="main">
           <img id="mic" src="/images/mic.png">
           <div><span id="currentTrack"></span></div>
+
+          <div id="slider_seek" class="progressbarplay" style="">
+            <div class="bar" style="width: 0%;"></div>
+          </div>
 
           <div id="dz-root"></div>
           <div id="player" align="center"></div>
@@ -67,18 +73,18 @@
     if (user_name == null) {
       $('#activity_feed > p').fadeOut(2000, function() {
         $(this).remove();
-        $('#activity_feed').append(`<p>A user ${activity} ${track_name} by ${artist}</p>`).hide().fadeIn(2000, function(){
+        $('#activity_feed').append(`<p>A user ${activity} ${track_name} by ${artist}</p>`).hide().fadeIn(2000, function() {
           $(this).fadeOut(2000);
         });
-        sort.refresh()
+        sort.refresh();
       })
     } else {
       $('#activity_feed > p').fadeOut(2000, function() {
         $(this).remove();
-        $('#activity_feed').append(`<p>${user_name} ${activity} ${track_name} by ${artist}</p>`).hide().fadeIn(2000, function(){
+        $('#activity_feed').append(`<p>${user_name} ${activity} ${track_name} by ${artist}</p>`).hide().fadeIn(2000, function() {
           $(this).fadeOut(2000);
-        });
-        sort.refresh()
+        })
+        sort.refresh();
       })
     }
   }
@@ -112,43 +118,35 @@
                <td class="text-center">0</td>
                </tr>`;
     $('#mainPlaylistRow').append(row)
-
-    var activity = 'added'
-
-    addToActivityFeed(activity, user_name, track_id, track_name, artist);
+    addToActivityFeed('added', user_name, track_id, track_name, artist);
   })
  
   socket.on('increase votes', function(user_name, track_id, track_name, artist){
+    addToActivityFeed('liked', user_name, track_id, track_name, artist);
     var id = $(`#${track_id}`).children().last().html();
     var id = Number(id) + 1 
     $(`#${track_id}`).children().last().html(id)
-    var activity = 'liked'
-    addToActivityFeed(activity, user_name, track_id, track_name, artist);
   })
 
   socket.on('decrease votes', function(user_name, track_id, track_name, artist){
+    addToActivityFeed('disliked', user_name, track_id, track_name, artist);
     var id = $(`#${track_id}`).children().last().html();
     var id = Number(id) - 1 
-    var activity = 'disliked'
     $(`#${track_id}`).children().last().html(id)
-    addToActivityFeed(activity, user_name, track_id, track_name, artist);
   })
 
   socket.on('send names', function(name, id){
     $('#users').append(`<p data-id=${id}>${name} </p>`)
-    var status = true;
-    userStatus(status, name);
+    userStatus(true, name);
   })
   
   socket.on('delete name', function(name, id){
     $(`p[data-id=${id}]`).remove();
-    var status = false;
-    userStatus(status, name);
+    userStatus(false, name);
   })
 
   socket.on('user connected', function(name){
-    var status = true;
-    userStatus(status, name);
+    userStatus(true, name);
   }) 
 
   socket.on('remove track from playlist', function(track_id){
@@ -235,6 +233,10 @@
     DZ.Event.subscribe('current_track', function(track){
       var current = `<h3 id="currentTrack">${track.track.title} <small class="text-muted">By ${track.track.artist.name}</small></h3>`
       $("#currentTrack").replaceWith(current);
+    });
+
+    DZ.Event.subscribe('player_position', function(arg){
+      $("#slider_seek").find('.bar').css('width', (100*arg[0]/arg[1]) + '%');
     });
   }
     
