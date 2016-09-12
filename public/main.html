@@ -6,10 +6,8 @@
     
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="progress_bar.css">
-
     <script type="text/javascript" src="https://cdns-files.dzcdn.net/js/min/dz-v00350607.js"></script>
     <script type="text/javascript" src="http://cdn-files.deezer.com/js/min/dz.js"></script>
-
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
   </head>
  
@@ -17,45 +15,36 @@
   <div id="wrapper" class="container">
     <div class="row">
       <div id="section_left" class="col-sm-4""></div>
-
       <div class="container col-md-4" id="main">
-
         <!-- mic -->
-        <img id="mic" src="/images/setupPhoto-1473688678053.png">
-
+        <img id='mic' src='/images/setupPhoto-1473709210654.jpeg'>
         <!-- album art slider here -->
         <div class="album_art">
           <img src="" id="current_track_image">
         </div>
         <!-- album art slider here -->
-
         <!-- displays the current track playing -->
         <div><span id="currentTrack"></span></div>
-
         <!-- track progress bar -->
         <div id="slider_seek" class="progressbarplay" style="">
           <div class="bar" style="width: 0%;"></div>
         </div>
-
         <!-- player -->
         <div id="dz-root"></div>
         <div id="player" align="center"></div>
-
         <!-- playlist table -->
         <table id="mainPlaylist" class="table table-striped col-sm-12" >
           <thead>
             <tr>
-              <th class="center-align">Track Name</th>
-              <th class="center-align">Artist</th>
-              <th class="center-align sort-default">Votes</th>  
+              <th class="text-center">Track Name</th>
+              <th class="text-center">Artist</th>
+              <th class="text-center sort-default">Votes</th>  
             </tr>
           </thead>
           <tbody id="mainPlaylistRow">
           </tbody>
         </table>
-
         <hr>
-
         <!-- displays current users -->
         <h6>Current users:</h6>
         <div id="users">
@@ -63,23 +52,18 @@
         </div> 
         
         <hr>
-
         <!-- displays the activity feed -->
         <div id="activity_feed"><p></p></div>
-
       </div><!-- end player container div -->
-
-      <div id="section_right" class="col s3 push-s9"></div>
-
+      <div id="section_right" class="col-sm-4"></div>
     </div> <!-- end row div -->
-
     <div id="bottom_section"></div>
   </div> <!-- end wrapper div -->
-
   <script>
     // Load all songs from database on page load and build initial table 
     $(document).ready(function(){
-      
+      $('#slider_seek').hide();
+      $('#currentTrack').hide();
       $.getJSON({
       url: '/songs',
         success: function(response){
@@ -94,14 +78,12 @@
           sort.refresh()
         }
       });
-
     });
   </script>
     
   <script src='/socket.io/socket.io.js'></script> 
   <script>
     var socket = io();
-
     function addToActivityFeed(activity, user_name, track_id, track_name, artist){
       if (user_name == null) {
         $('#activity_feed > p').fadeOut(2000, function() {
@@ -121,10 +103,8 @@
         })
       }
     }
-
     function userStatus(status, user_name) {
       var user_name = user_name || "A user";
-
       if (status == true) {
         $('#activity_feed > p').fadeOut(2000, function() {
           $(this).remove();
@@ -158,14 +138,12 @@
       var id = Number(id) + 1 
       $(`#${track_id}`).children().last().html(id)
     })
-
     socket.on('decrease votes', function(user_name, track_id, track_name, artist){
       addToActivityFeed('disliked', user_name, track_id, track_name, artist);
       var id = $(`#${track_id}`).children().last().html();
       var id = Number(id) - 1 
       $(`#${track_id}`).children().last().html(id)
     })
-
     socket.on('send names', function(name, id){
       $('#users').append(`<p data-id=${id}>${name} </p>`)
       userStatus(true, name);
@@ -175,46 +153,67 @@
       $(`p[data-id=${id}]`).remove();
       userStatus(false, name);
     })
-
     socket.on('user connected', function(name){
       userStatus(true, name);
     }) 
-
     socket.on('remove track from playlist', function(track_id){
       $(`#tablePlaylist tr#${track_id}`).remove();
     })
 
   var counter = 1
+  var pictureQueue = []
+
   socket.on('picture upload', function(picture, filename, width, height){
-    // *** filename is used as an id ***
     var posx = 0
     var posY = 0 
-
     function calcPosition() {
       var row = document.getElementById(`${filename}`).parentElement.parentElement.getBoundingClientRect();
       var section = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
       posX = Math.floor(Math.random()*(section.width - width))
       posY = Math.floor(Math.random()*(row.height - height))
-      console.log("3 :  " + posX + " " + posY)
     }
+    
+    pictureQueue.push({
+      picture: picture,
+      filename: filename,
+      width: width,
+      height: height,
+      counter: counter
+    })
 
-    if ( counter % 3 == 0 ) {
-      $('#section_left').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-      calcPosition();
-    } 
-    else if ( counter % 2 == 0 ) {
-      $('#section_right').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-      calcPosition();
-    } 
-    else if ( counter % 1 == 0 ) {
-      $('#bottom_section').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-      calcPosition();
+    addImages();
+    function addImages() {
+      if ( pictureQueue[0].counter % 3 == 0 ) {
+        $('#section_left').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
+          $(this).delay(3200).fadeOut('slow')
+        }));
+        $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+        calcPosition();
+        $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+      } 
+      else if ( pictureQueue[0].counter % 2 == 0 ) {
+        $('#section_right').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
+          $(this).delay(3200).fadeOut('slow')
+        }));
+        $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+        calcPosition();
+        $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+      } 
+      else if ( pictureQueue[0].counter % 1 == 0 ) {
+        $('#bottom_section').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
+          $(this).delay(3200).fadeOut('slow')
+        }));
+        $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+        calcPosition();
+        $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+      }
+      pictureQueue.shift()
+      counter++
+      if (pictureQueue.length > 0) {
+        setTimeout(addImages, 3000)
+      }
     }
-    counter++
-    $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
-
   })
-  
 
     DZ.init({
       appId  : '190182',
@@ -226,41 +225,50 @@
         onload : onPlayerLoaded
       }
     });
+    $("#slider_seek").click(function(evt,arg){
+      var left = evt.offsetX;
+      DZ.player.seek((evt.offsetX/$(this).width()) * 100);
+    });
+    function loadTrackImage(track_image){
+      $('.album_art > img').fadeOut(2000, function() {
+        $("#current_track_image").attr('src', `${track_image}`).hide().fadeIn(2000);
+      })
+    }
+    function checkIfNextTrackEmpty(track_id, track_image){
+      if ( !(isNaN(track_id)) ) {
+        startPlayer(track_id, track_image); 
+      } else if (isNaN(track_id)) {
+        $("#mic, #currentTrack").css("animation", "none");
+        $("#currentTrack, #slider_seek, #current_track_image").hide();
+      }
+    }
     
     function startPlayer(track_id, track_image){
+      $('#slider_seek').show();
+      $('#currentTrack').show();
       $("#mic").css("animation", "growShake 1s infinite");
+      $("#currentTrack").css("animation", "pulse 1s infinite");
       DZ.player.playTracks([track_id], function(){
         $(`#${track_id}`).remove();
-        $("#current_track_image").attr('src', `${track_image}`) 
+        loadTrackImage(track_image);
         socket.emit('delete track', track_id)
       });  
     }
-
     function onPlayerLoaded() {
-
       $("#mic").click(function(){
         var start_track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'));
         var start_track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image')
-        startPlayer(start_track_id, start_track_image);       
+        checkIfNextTrackEmpty(start_track_id, start_track_image);       
       })
-
       DZ.Event.subscribe('track_end', function(){ 
         var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'))
         var track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image')
-        
-        if ( !(isNaN(track_id)) ) {
-          startPlayer(track_id, track_image); 
-        } else if (isNaN(track_id)) {
-          $("#mic").css("animation", "none");
-          $("#currentTrack").hide();
-        }
+        checkIfNextTrackEmpty(track_id, track_image)
       })   
-
       DZ.Event.subscribe('current_track', function(track){
         var current = `<h4 id="currentTrack">${track.track.title} <small>By ${track.track.artist.name}</small></h4>`
         $("#currentTrack").replaceWith(current);
       });
-
       DZ.Event.subscribe('player_position', function(arg){
         $("#slider_seek").find('.bar').css('width', (100*arg[0]/arg[1]) + '%');
       });
@@ -276,3 +284,55 @@
     </script>
   </body>
 </html>
+<!-- 
+        $image = $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+        $('#section_left').empty()
+        $image.hide().append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).fadeIn()
+
+         -->
+<!--   var counter = 1
+  var pictureQueue = []
+
+  socket.on('picture upload', function(picture, filename, width, height){
+    var posx = 0
+    var posY = 0 
+    function calcPosition() {
+      var row = document.getElementById(`${filename}`).parentElement.parentElement.getBoundingClientRect();
+      var section = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
+      posX = Math.floor(Math.random()*(section.width - width))
+      posY = Math.floor(Math.random()*(row.height - height))
+    }
+    
+    pictureQueue.push({
+      picture: picture,
+      filename: filename,
+      width: width,
+      height: height,
+      counter: counter
+    })
+
+    setInterval(function(){
+      if (pictureQueue.length == 0) {
+        if ( pictureQueue[0].counter % 3 == 0 ) {
+          $('#section_left').empty().append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+          calcPosition();
+          $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+        } 
+        else if ( pictureQueue[0].counter % 2 == 0 ) {
+          $('#section_right').empty().append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+          calcPosition();
+          $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+        } 
+        else if ( pictureQueue[0].counter % 1 == 0 ) {
+          $('#bottom_section').empty().append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+          calcPosition();
+          $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+        }
+        pictureQueue.shift()
+        // if (pictureQueue.length == 0) {
+        //   clearInterval(timer)
+        //   console.log("done")
+        counter++
+      }
+    }, 5000)
+  }) -->

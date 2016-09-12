@@ -136,7 +136,7 @@ $(document).ready(function() {
   });
 
   socket.on('refresh button', function(track_id){
-    let $buttonToBeRefreshed = $(`#${track_id} td:nth-child(4) > button`);
+    var $buttonToBeRefreshed = $(`#${track_id} td:nth-child(4) > button`);
     $buttonToBeRefreshed.prop('disabled', false);
     $buttonToBeRefreshed.removeClass();
     $buttonToBeRefreshed.addClass('btn btn-danger btn-xs addButton').html("Add to Playlist");
