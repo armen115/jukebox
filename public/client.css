@@ -116,3 +116,8 @@ table {
 	border: 2px solid #aaa;
 	/*animation: growShake 1s infinite;*/
 }
+
+#message {
+	color: black;
+	margin-top: 16px;
+}

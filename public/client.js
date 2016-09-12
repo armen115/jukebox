@@ -175,11 +175,15 @@ $(document).ready(function() {
  $('#mainPictureTab').on('click', hideAll)
 
  $('#uploadForm').submit(function(e) {
-  // $(this).hide()
   e.preventDefault();
-  if ( $('#picture_select').get(0).files.length == 0) {
-    alert('You cant upload an empty file!')
-  } else {
+  var allowedFiles = [".png", ".jpg", ".jpeg", ".gif"];
+  var fileUpload = $("#picture_select");
+  var messageBox = $("#message");
+  var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+  if (!regex.test(fileUpload.val().toLowerCase())) {
+      messageBox.html("Please select a picture!");
+      return false;
+  }
     $.ajax({
       url: '/uploads',
       type: 'POST',
@@ -187,10 +191,10 @@ $(document).ready(function() {
       processData: false,
       contentType: false,
       success: function(data){
-        console.log('Upload complete!')
+        $('#message').empty()
+        $('#message').append('Upload complete!')
       }
     });
-  }
  });
 
 });
