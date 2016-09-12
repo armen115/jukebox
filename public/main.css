@@ -19,7 +19,6 @@ body {
 	width: 100%;
 }
 
-
 @keyframes growShake {
 	from {
 		transform: scale(1);
@@ -91,3 +90,13 @@ hr {
 #currentTrack {
 	animation: pulse 1s infinite;
 }
+
+.album_art > img {
+  /*border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;*/
+  border: 10px solid #8A0707;
+}
+
+
+

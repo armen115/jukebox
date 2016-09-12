@@ -22,7 +22,7 @@ var upload = multer({ storage: storage },{limits: {}}).single('userPhoto')
 var db = new sqlite3.Database(file);
 db.serialize(function() {
   if(!exists) {
-    db.run("CREATE TABLE songs (track_id STRING, track_name STRING, track_artist STRING, votes INTEGER)");
+    db.run("CREATE TABLE songs (track_id STRING, track_name STRING, track_artist STRING, votes INTEGER, track_image STRING)");
   }
 });
 
@@ -95,11 +95,11 @@ io.on('connection', function(socket){
 		io.emit('send names', name, id)
 	})
 
-  socket.on('add track', function(track_id, track_title, artist){
-    db.run("INSERT INTO songs VALUES (?, ?, ?, ?)", [track_id, track_title, artist, 0]);
-    console.log(`Song added: ID: ${track_id}, NAME: ${track_title}, ARTIST: ${artist}`)
+  socket.on('add track', function(track_id, track_title, artist, track_image){
+    db.run("INSERT INTO songs VALUES (?, ?, ?, ?, ?)", [track_id, track_title, artist, 0, track_image]);
+    console.log(`Song added: ID: ${track_id}, NAME: ${track_title}, ARTIST: ${artist}, IMAGE: ${track_image}`)
     var user = getUserInfo();
-    io.emit('broadcast track', user.name, track_id, track_title, artist)
+    io.emit('broadcast track', user.name, track_id, track_title, artist, track_image)
   })
 
   socket.on('delete track', function(track_id){

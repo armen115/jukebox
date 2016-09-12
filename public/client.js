@@ -2,7 +2,7 @@ $(document).ready(function() {
   // Hide everything on page load
   $("#tableSearchResults, #search, #tablePlaylist, #pictureDiv").hide();
 
-   // Load all songs from database on page load and build initial table 
+  // Load all songs from database on page load and build initial table 
   $.getJSON({
     url: '/songs',
     success: function(response){
@@ -18,15 +18,16 @@ $(document).ready(function() {
     }
   });
 
-  addTrackToPlaylist = function(e){
+  addTrackToPlaylist = function(e) {
     var track_title = e.getAttribute("data-track-title");
     var track_id = e.getAttribute("data-track-id");
     var artist = e.getAttribute("data-artist");
+    var track_image = e.getAttribute("data-track-image");
     
     var $row = $(`#tablePlaylist tr#${track_id}`);
 
     if ($row.length == 0) {
-      socket.emit('add track', track_id, track_title, artist);
+      socket.emit('add track', track_id, track_title, artist, track_image);
       disableButton(e);
     } else if ($row.length == 1) {
       trackExisting(e);
@@ -50,8 +51,9 @@ $(document).ready(function() {
 
   displayResult = function(track) {
     var artist = track.artist.name;
+    var track_image = track.album.cover_medium;
 
-    var addPlaylistButton = `<button data-track-title="${track.title_short}" data-track-id=${track.id} data-artist="${artist}" class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+    var addPlaylistButton = `<button data-track-title="${track.title_short}" data-track-id=${track.id} data-artist="${artist}" data-track-image="${track_image}" class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
 
     var resultRow = `<tr id="${track.id}">
                      <td class="text-center">${track.title_short}</td>
@@ -91,7 +93,7 @@ $(document).ready(function() {
 
       if(query.length > 0) {
         $.ajax({
-          url: `http://api.deezer.com/search/track?q=${searchTrack}&limit=5&output=jsonp`,
+          url: `http://api.deezer.com/search/track?strict=on&q=${searchTrack}&limit=5&output=jsonp`,
           type: 'GET',
           dataType: "jsonp",
           success: function( response ) {
@@ -121,8 +123,8 @@ $(document).ready(function() {
 
   $('#tablePlaylist').on('click', '.down', function(){    
     var track_id = this.parentElement.parentElement.getAttribute('id')
-    var track_name = $(`tr#${track_id} td:nth-child(1)`).text()
-    var artist = $(`tr#${track_id} td:nth-child(2)`).text()
+    var track_name = $(`tr#${track_id} td:nth-child(1)`).first().text()
+    var artist = $(`tr#${track_id} td:nth-child(2)`).first().text()
     var currentVotes = $(`tr#${track_id} td:nth-child(3)`).text()
 
     if (currentVotes > 0) { 
