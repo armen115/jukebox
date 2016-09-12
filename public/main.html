@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+  
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
     <link rel="stylesheet" href="main.css">
@@ -69,6 +70,7 @@
       </div><!-- end player container div -->
 
       <div id="section_right" class="col s3 push-s9"></div>
+
     </div> <!-- end row div -->
 
     <div id="bottom_section"></div>
@@ -77,8 +79,7 @@
   <script>
     // Load all songs from database on page load and build initial table 
     $(document).ready(function(){
-      $('.carousel').carousel();
-
+      
       $.getJSON({
       url: '/songs',
         success: function(response){
@@ -183,46 +184,37 @@
       $(`#tablePlaylist tr#${track_id}`).remove();
     })
 
-    var counter = 1
-    socket.on('picture upload', function(picture, filename){
-      // Create random numbers between 0 and the width/height
-      // Set inital left and top positions
-      var width = 200
-      var height = 300
-      // var posX = Math.floor(Math.random()*(width - width))
-      // var posY = Math.floor(Math.random()*(body.height - height))
+  var counter = 1
+  socket.on('picture upload', function(picture, filename, width, height){
+    // *** filename is used as an id ***
+    var posx = 0
+    var posY = 0 
 
-      if ( counter % 3 == 0 ) {
-        $('#section_left').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-        var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
-        var posX = Math.floor(Math.random()*(parentElement.width - width))
-        var posY = Math.floor(Math.random()*(parentElement.height - height))
-      } 
-      else if ( counter % 2 == 0 ) {
-        $('#section_right').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-        var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
-        var posX = Math.floor(Math.random()*(parentElement.width - width))
-        var posY = Math.floor(Math.random()*(parentElement.height - height))
-      } 
-      else if ( counter % 1 == 0 ) {
-        $('#bottom_section').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-        var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
-        var posX = Math.floor(Math.random()*(parentElement.width - width))
-        var posY = Math.floor(Math.random()*(parentElement.height - height))
-      }
-      counter++
-      console.log(counter)
-      $(`#${filename}`).css({ 'position': 'relative', 'left': posX, 'top': posY })
-      
-      // while (   !((posY  + height) < mainBounds.top && posY > mainBounds.bottom)  ) {
-      //   posY = Math.floor(Math.random()*(body.height - height))
-      // }
+    function calcPosition() {
+      var row = document.getElementById(`${filename}`).parentElement.parentElement.getBoundingClientRect();
+      var section = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
+      posX = Math.floor(Math.random()*(section.width - width))
+      posY = Math.floor(Math.random()*(row.height - height))
+      console.log("3 :  " + posX + " " + posY)
+    }
 
-      // while (   !((posX  + width) < mainBounds.left && posX > mainBounds.right)  ) {
-      //   posX = Math.floor(Math.random()*(body.width - width))
-      // }
+    if ( counter % 3 == 0 ) {
+      $('#section_left').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+      calcPosition();
+    } 
+    else if ( counter % 2 == 0 ) {
+      $('#section_right').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+      calcPosition();
+    } 
+    else if ( counter % 1 == 0 ) {
+      $('#bottom_section').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+      calcPosition();
+    }
+    counter++
+    $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
 
-    })
+  })
+  
 
     DZ.init({
       appId  : '190182',
@@ -282,22 +274,5 @@
         descending: true
       });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
   </body>
 </html>
-
-
-<!--     var width = 200
-    var height = 300
-    
-    var posX = Math.floor(Math.random()*(bodyWidth.width - width))
-    var posY = Math.floor(Math.random()*(bodyHeight.height - height))
-
-    // Get main element, do calculation to prevent overlap
-    mainBounds = document.getElementById('main').getBoundingClientRect()
-    if ( ((posY  + height) < mainBounds.top) && (posY > mainBounds.bottom) ) {
-      posX = posX
-    } else {
-      
-    }
- -->
