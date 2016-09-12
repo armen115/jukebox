@@ -21,7 +21,7 @@
       <div class="container col-md-4" id="main">
 
         <!-- mic -->
-        <img id="mic" src="/images/setupPhoto-1473688678053.png">
+        <img id='mic' src='/images/mic.png'>
 
         <!-- album art slider here -->
         <div class="album_art">
@@ -30,7 +30,7 @@
         <!-- album art slider here -->
 
         <!-- displays the current track playing -->
-        <div><span id="currentTrack"></span></div>
+        <div id="currentTrackDiv"><span id="currentTrack"></span></div>
 
         <!-- track progress bar -->
         <div id="slider_seek" class="progressbarplay" style="">
@@ -45,9 +45,9 @@
         <table id="mainPlaylist" class="table table-striped col-sm-12" >
           <thead>
             <tr>
-              <th class="center-align">Track Name</th>
-              <th class="center-align">Artist</th>
-              <th class="center-align sort-default">Votes</th>  
+              <th class="text-center">Track Name</th>
+              <th class="text-center">Artist</th>
+              <th class="text-center sort-default">Votes</th>  
             </tr>
           </thead>
           <tbody id="mainPlaylistRow">
@@ -79,7 +79,9 @@
   <script>
     // Load all songs from database on page load and build initial table 
     $(document).ready(function(){
-      
+      $('#slider_seek').hide();
+      $('#currentTrackDiv').hide();
+
       $.getJSON({
       url: '/songs',
         success: function(response){
@@ -215,7 +217,6 @@
 
   })
   
-
     DZ.init({
       appId  : '190182',
       channelUrl : 'https://example@example.com',
@@ -226,12 +227,36 @@
         onload : onPlayerLoaded
       }
     });
+
+    $("#slider_seek").click(function(evt,arg){
+      var left = evt.offsetX;
+      DZ.player.seek((evt.offsetX/$(this).width()) * 100);
+    });
+
+    function loadTrackImage(track_image){
+      $('.album_art > img').fadeOut(2000, function() {
+        $("#current_track_image").attr('src', `${track_image}`).hide().fadeIn(2000);
+      })
+    }
+
+    function checkIfNextTrackEmpty(track_id, track_image){
+      if ( !(isNaN(track_id)) ) {
+        startPlayer(track_id, track_image); 
+      } else if (isNaN(track_id)) {
+        $("#mic").css("animation", "none");
+        $("#slider_seek, #current_track_image").hide();
+        $("#currentTrackDiv").hide();
+      }
+    }
     
     function startPlayer(track_id, track_image){
+      $('#slider_seek').show();
+      $('#currentTrackDiv').show();
       $("#mic").css("animation", "growShake 1s infinite");
+      $('#currentTrackDiv').css("animation", "pulse 1s infinite");
       DZ.player.playTracks([track_id], function(){
         $(`#${track_id}`).remove();
-        $("#current_track_image").attr('src', `${track_image}`) 
+        loadTrackImage(track_image);
         socket.emit('delete track', track_id)
       });  
     }
@@ -241,19 +266,13 @@
       $("#mic").click(function(){
         var start_track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'));
         var start_track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image')
-        startPlayer(start_track_id, start_track_image);       
+        checkIfNextTrackEmpty(start_track_id, start_track_image);       
       })
 
       DZ.Event.subscribe('track_end', function(){ 
         var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'))
         var track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image')
-        
-        if ( !(isNaN(track_id)) ) {
-          startPlayer(track_id, track_image); 
-        } else if (isNaN(track_id)) {
-          $("#mic").css("animation", "none");
-          $("#currentTrack").hide();
-        }
+        checkIfNextTrackEmpty(track_id, track_image)
       })   
 
       DZ.Event.subscribe('current_track', function(track){

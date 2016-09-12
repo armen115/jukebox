@@ -90,7 +90,7 @@ hr {
 }
 
 #currentTrack {
-	animation: pulse 1s infinite;
+	/*animation: pulse 1s infinite;*/
 }
 
 .album_art > img {
