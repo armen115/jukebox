@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+  
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="main.css">
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
@@ -10,15 +11,15 @@
   <body>
   <div id="wrapper" class="container">
     <div class="row">
-     <div id="section_left" class="col-md-4"></div>
+     <div id="section_left" class="col-sm-4"></div>
         <div class="container col-md-4" id="main">
+          <img id='mic' src='/images/setupPhoto-1473688678053.png'>
           <span id="currentTrack"></span>
-          <img id="mic" src="/images/mic.png">
 
           <div id="dz-root"></div>
           <div id="player" align="center"></div>
 
-          <table id="mainPlaylist" class="table table-striped col-md-12" >
+          <table id="mainPlaylist" class="table table-striped col-sm-12" >
             <thead>
               <tr>
                 <th class="text-center">Track Name</th>
@@ -33,7 +34,7 @@
           <hr>
           <div id="activity_feed"><p></p></div>
       </div>
-      <div id="section_right" clas qs="col-md-4"></div>
+      <div id="section_right" class="col-sm-4"></div>
     </div> <!-- end row div -->
 
     <div id="bottom_section"></div>
@@ -156,43 +157,33 @@
   })
 
   var counter = 1
-  socket.on('picture upload', function(picture, filename){
-    // Create random numbers between 0 and the width/height
-    // Set inital left and top positions
-    var width = 200
-    var height = 300
-    // var posX = Math.floor(Math.random()*(width - width))
-    // var posY = Math.floor(Math.random()*(body.height - height))
+  socket.on('picture upload', function(picture, filename, width, height){
+    // *** filename is used as an id ***
+    var posx = 0
+    var posY = 0 
+
+    function calcPosition() {
+      var row = document.getElementById(`${filename}`).parentElement.parentElement.getBoundingClientRect();
+      var section = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
+      posX = Math.floor(Math.random()*(section.width - width))
+      posY = Math.floor(Math.random()*(row.height - height))
+      console.log("3 :  " + posX + " " + posY)
+    }
 
     if ( counter % 3 == 0 ) {
       $('#section_left').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-      var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
-      var posX = Math.floor(Math.random()*(parentElement.width - width))
-      var posY = Math.floor(Math.random()*(parentElement.height - height))
+      calcPosition();
     } 
     else if ( counter % 2 == 0 ) {
       $('#section_right').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-      var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
-      var posX = Math.floor(Math.random()*(parentElement.width - width))
-      var posY = Math.floor(Math.random()*(parentElement.height - height))
+      calcPosition();
     } 
     else if ( counter % 1 == 0 ) {
       $('#bottom_section').append(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-      var parentElement = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
-      var posX = Math.floor(Math.random()*(parentElement.width - width))
-      var posY = Math.floor(Math.random()*(parentElement.height - height))
+      calcPosition();
     }
     counter++
-    console.log(counter)
-    $(`#${filename}`).css({ 'position': 'relative', 'left': posX, 'top': posY })
-    
-    // while (   !((posY  + height) < mainBounds.top && posY > mainBounds.bottom)  ) {
-    //   posY = Math.floor(Math.random()*(body.height - height))
-    // }
-
-    // while (   !((posX  + width) < mainBounds.left && posX > mainBounds.right)  ) {
-    //   posX = Math.floor(Math.random()*(body.width - width))
-    // }
+    $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
 
   })
 
@@ -264,3 +255,11 @@
       
     }
  -->
+    
+<!--     // while (   !((posY  + height) < mainBounds.top && posY > mainBounds.bottom)  ) {
+    //   posY = Math.floor(Math.random()*(body.height - height))
+    // }
+
+    // while (   !((posX  + width) < mainBounds.left && posX > mainBounds.right)  ) {
+    //   posX = Math.floor(Math.random()*(body.width - width))
+    // } -->

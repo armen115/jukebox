@@ -2,6 +2,7 @@
 	<head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="setup.css">
+  <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
 	</head>
 	<body>
 	<div id="main" class="container">
@@ -9,13 +10,35 @@
 		<h4>Please select any additional modifications you would like to make to your jukebox</h4>
 		<p>Custom Logo</p>
 		<div id="pictureDiv">
-	    <form id="uploadForm" enctype="multipart/form-data" action="/uploads" method="post">
-	      <input type="file" id="picture_select" name="userPhoto" class="hidden" />
+	    <form id="uploadForm" enctype="multipart/form-data" action="/setup" method="post">
+	      <input type="file" id="picture_select" name="setupPhoto" class="hidden" />
 	      <label for="picture_select" id="picture_select_label">Select file</label>
 	      <input id="picture_select_submit" type="submit" value="Upload Image" name="submit">
 	    </form>
     </div>
 		<p>Genre Limitations</p>
 	</div>
+	<script>
+	$(document).ready(function(){
+		$('#uploadForm').submit(function(e) {
+	  // $(this).hide()
+	  e.preventDefault();
+	  if ( $('#picture_select').get(0).files.length == 0) {
+	    alert('You cant upload an empty file!')
+	  } else {
+	    $.ajax({
+	      url: '/setup',
+	      type: 'POST',
+	      data: new FormData( this ),
+	      processData: false,
+	      contentType: false,
+	      success: function(data){
+	        console.log('Upload complete!')
+	      }
+	    });
+	  }
+	 });
+	})
+	</script>
 	</body>
 </html>

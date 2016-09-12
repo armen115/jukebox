@@ -1,6 +1,27 @@
+html, body {
+	background-color: #f7f7f9;
+}
+
 audio {
 	width: 74%;
 }
+
+.headline, #welcome_h1, label {
+	color: #737373;
+}
+
+#picture_select_submit {
+	border: none;
+	padding: 12px;
+	border-radius: 3px;
+	color: white;
+	background-color: #1abc9c;
+}
+
+#picture_select_label {
+	margin-bottom: 12px;
+}
+
 
 #message_form {
 	display: none;
@@ -16,6 +37,11 @@ td {
 	width: 25%;
 }
 
+#nickname {
+	margin: 0 auto;
+	width: 60%
+}
+
 .headline, #nickname_form, #users {
 	text-align: center;
 }
@@ -26,7 +52,9 @@ table {
 }
 
 #nickname_submit {
-	margin: 7px;
+	margin: 12px;
+	background-color: #1abc9c;
+	border: none;
 }
 
 #users > p {
@@ -69,12 +97,6 @@ table {
 	text-align: center;
 }
 
-#picture_select {
-}
-
-#picture_select_label {
-	
-}
 #picture_select_submit {
 	margin: 0 auto;
 	display: block;
@@ -82,4 +104,15 @@ table {
 
 .table>thead>tr>th {
 	border-bottom: none;
+}
+
+#mic {
+	display: block;
+	margin: 15px auto;
+	height: 100px;
+	width: 100px;
+	border-radius: 50%;
+	background-color: white;
+	border: 2px solid #aaa;
+	/*animation: growShake 1s infinite;*/
 }

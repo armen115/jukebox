@@ -7,10 +7,10 @@ var fs = require("fs");
 var file = "hello.db";
 var exists = fs.existsSync(file);
 var sqlite3 = require('sqlite3').verbose();
-
+var sharp = require('sharp')
 var mime = require('mime')
 var multer = require('multer')
-var storage = multer.diskStorage({
+var publicStorage = multer.diskStorage({
 	destination: function(req, file, callback){
 		callback(null, './public/uploads');
 	},
@@ -18,7 +18,17 @@ var storage = multer.diskStorage({
 		callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype))
 	}
 })
-var upload = multer({ storage: storage },{limits: {}}).single('userPhoto')
+var publicUpload = multer({ storage: publicStorage },{limits: {}}).single('userPhoto')
+var setupStorage = multer.diskStorage({
+	destination: function(req, file, callback){
+		callback(null, './public/images');
+	},
+	filename: function(req, file, callback){
+		callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype))
+	}
+})
+var setupUpload = multer({ storage: setupStorage },{limits: {}}).single('setupPhoto')
+
 var db = new sqlite3.Database(file);
 db.serialize(function() {
   if(!exists) {
@@ -36,12 +46,42 @@ app.get('/', function(req, res){
 });	
 
 app.post('/uploads', function(req, res){
-	upload(req, res, function(err){
+	publicUpload(req, res, function(err){
 		if (err){
 			return res.end('Error uploading file.')
 		}
 		res.sendStatus(200)
-		io.emit("picture upload", req["file"]["filename"], req["file"]["filename"].replace(/\.[^/.]+$/, ""))
+		// console.log(req)
+		sharp(req["file"]["path"]).resize(300, 200).max().toFile(`public/uploads/SMALL-${req["file"]["filename"]}`).then(function(){
+
+			pictureName = `SMALL-${req["file"]["filename"]}`
+			sharp(`public/uploads/${pictureName}`).metadata(function(err, metadata){ 
+				
+			io.emit("picture upload", pictureName, req["file"]["filename"].replace(/\.[^/.]+$/, ""), metadata.height, metadata.width)
+			})
+			
+		})
+	})	
+})
+
+app.post('/setup', function(req, res){
+	setupUpload(req, res, function(err){
+		if (err){
+			return res.end('Error uploading file.')
+		}
+		res.sendStatus(200)
+		fs.readFile('public/main.html', 'utf8', function(err, data){
+			if (err) {
+				console.log(err)
+			}
+			newString = ("<img id='mic' src='/images/" + req['file']['filename'] + "'>")
+			var result = data.replace(/<img id='mic' src='.+'>/g, newString )
+			fs.writeFile('public/main.html', result, 'utf8', function(err){
+				if (err){
+					console.log(err)
+				}
+			})
+		})
 	})	
 })
 
@@ -140,3 +180,18 @@ http.listen(3000, function(){
 
 
 
+// app.post('/uploads', function(req, res){
+// 	upload(req, res, function(err){
+// 		if (err){
+// 			return res.end('Error uploading file.')
+// 		}
+// 		res.sendStatus(200)
+// 		// console.log(req)
+// 		sharp(req["file"]["path"]).resize(300).toFile(`public/uploads/SMALL-${req["file"]["filename"]}`).then(function(){
+
+// 			pictureName = `SMALL-${req["file"]["filename"]}`
+// 			io.emit("picture upload", pictureName, req["file"]["filename"].replace(/\.[^/.]+$/, ""))
+			
+// 		})
+// 	})	
+// })

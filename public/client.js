@@ -178,7 +178,7 @@ $(document).ready(function() {
   // $(this).hide()
   e.preventDefault();
   if ( $('#picture_select').get(0).files.length == 0) {
-    alert('file cant be empty')
+    alert('You cant upload an empty file!')
   } else {
     $.ajax({
       url: '/uploads',
