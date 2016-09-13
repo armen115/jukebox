@@ -10,10 +10,11 @@
  
   <body>
   <div class="container">
+
     <img id='mic' src='/images/mic.png'>
     <!-- <h1 class="headline">Jukebox</h1> -->
     <ul id="chat_area">
-      
+     
     </ul>
     <form id="nickname_form">
       <label>Nickname:</label>
@@ -35,34 +36,7 @@
 
     <div id="autocomplete" class="center-block" style="margin-top: 20px; margin-bottom: 20px;">
         <input id="search" placeholder="Search for Tracks" class="center-block form-control"></input>
-      </div>
     </div>
-
-    <table id="tablePlaylist" class="table table-striped table-sm">
-      <thead>
-        <tr>
-          <th class="text-center">Track Name</th>
-          <th class="text-center">Artist</th>
-          <th class="text-center sort-default">Votes</th>
-          <th class="text-center"></th>
-        </tr>
-      </thead>
-      <tbody id="playlist">
-      </tbody>
-    </table>  
-
-    <table id="tableSearchResults" class="table table-striped col-md-12">
-      <thead>
-        <tr>
-          <th class="text-center">Track Name</th>
-          <th class="text-center">Artist</th>
-          <th class="text-center">Preview</th>
-          <th class="text-center"></th>  
-        </tr>
-      </thead>
-      <tbody id="searchResults">
-      </tbody>
-    </table>
 
     <h1 id="welcome_h1">Welcome! Hit a tab to get started</h1>
     <div id="pictureDiv">
@@ -75,6 +49,16 @@
     </form>
     <p id="message"></p>
     </div>
+
+    <table id="tablePlaylist" class="table-condensed table table-striped col-md-12">
+      <tbody id="playlist">
+      </tbody>
+    </table>  
+
+    <table id="tableSearchResults" class="table-condensed table table-striped col-md-12">
+      <tbody id="searchResults">
+      </tbody>
+    </table>
     
   </div>
 
@@ -99,13 +83,42 @@
       $(`p[data-id=${id}]`).remove();
     })
 
-    socket.on('broadcast track', function(user_name, track_id, track_title, artist){
+    socket.on('broadcast track', function(user_name, track_id, track_title, artist, track_image){
+      // var playlistRow = `<tr id="${track_id}">
+      //                    <td class="text-center">${track_title}</td>
+      //                    <td class="text-center">${artist}</<td>
+      //                    <td class="text-center">0</td>
+      //                    <td>
+      //                     <button class="btn btn-primary up">Vote up</button>
+      //                     <button class="btn btn-warning down">Vote down</button>
+      //                    </td>
+      //                    </tr>`;
+
+
       var playlistRow = `<tr id="${track_id}">
-                         <td class="text-center">${track_title}</td>
-                         <td class="text-center">${artist}</<td>
-                         <td class="text-center">0</td>
-                         <td><button class="btn btn-primary up">Vote up</button><button class="btn btn-warning down">Vote down</button></td>
+                           
+                           <td colspan="4">
+
+                            <ul class="list-unstyled">
+
+                              <div class="tr_title"><li class="text-left">${track_title}</li></div>
+                              <li class="ext-left"><small>${artist}</small></li>
+                            </ul>
+                           </td>
+                           <td class="img_td_2">
+                            <span class="badge badge-success">12</span>
+                           </td>
+                           <td class="img_td_2">
+                            <button class="up"><img class="addButtonImages" src="images/thumbs_up.png"/></button>
+                           </td>
+                           <td class="img_td_2">
+                            <button class="down"><img class="addButtonImages" src="images/thumbs_down.png"/></button>
+                           </td>
                          </tr>`;
+
+
+
+
       $('#playlist').append(playlistRow);
     })
 

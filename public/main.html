@@ -132,6 +132,7 @@
                  </tr>`;
       $('#mainPlaylistRow').append(row)
       addToActivityFeed('added', user_name, track_id, track_name, artist);
+      // checkIfPlaylistEmpty(track_id, track_image)
     })
    
     socket.on('increase votes', function(user_name, track_id, track_name, artist){
@@ -162,61 +163,61 @@
       $(`#tablePlaylist tr#${track_id}`).remove();
     })
 
-  var counter = 1
-  var pictureQueue = []
+    var counter = 1
+    var pictureQueue = []
 
-  socket.on('picture upload', function(picture, filename, width, height){
-    var posx = 0
-    var posY = 0 
-    function calcPosition() {
-      var row = document.getElementById(`${filename}`).parentElement.parentElement.getBoundingClientRect();
-      var section = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
-      posX = Math.floor(Math.random()*(section.width - width))
-      posY = Math.floor(Math.random()*(row.height - height))
-    }
-    
-    pictureQueue.push({
-      picture: picture,
-      filename: filename,
-      width: width,
-      height: height,
-      counter: counter
+    socket.on('picture upload', function(picture, filename, width, height){
+      var posx = 0
+      var posY = 0 
+      function calcPosition() {
+        var row = document.getElementById(`${filename}`).parentElement.parentElement.getBoundingClientRect();
+        var section = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
+        posX = Math.floor(Math.random()*(section.width - width))
+        posY = Math.floor(Math.random()*(row.height - height))
+      }
+      
+      pictureQueue.push({
+        picture: picture,
+        filename: filename,
+        width: width,
+        height: height,
+        counter: counter
+      })
+
+      addImages();
+      function addImages() {
+        if ( pictureQueue[0].counter % 3 == 0 ) {
+          $('#section_left').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
+            $(this).delay(3200).fadeOut('slow')
+          }));
+          $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+          calcPosition();
+          $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+        } 
+        else if ( pictureQueue[0].counter % 2 == 0 ) {
+          $('#section_right').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
+            $(this).delay(3200).fadeOut('slow')
+          }));
+          $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+          calcPosition();
+          $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+        } 
+        else if ( pictureQueue[0].counter % 1 == 0 ) {
+          $('#bottom_section').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
+            $(this).delay(3200).fadeOut('slow')
+          }));
+          $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
+          calcPosition();
+          $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
+        }
+        pictureQueue.shift()
+        counter++
+        if (pictureQueue.length > 0) {
+          setTimeout(addImages, 3000)
+        }
+      }
     })
-
-    addImages();
-    function addImages() {
-      if ( pictureQueue[0].counter % 3 == 0 ) {
-        $('#section_left').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
-          $(this).delay(3200).fadeOut('slow')
-        }));
-        $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-        calcPosition();
-        $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
-      } 
-      else if ( pictureQueue[0].counter % 2 == 0 ) {
-        $('#section_right').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
-          $(this).delay(3200).fadeOut('slow')
-        }));
-        $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-        calcPosition();
-        $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
-      } 
-      else if ( pictureQueue[0].counter % 1 == 0 ) {
-        $('#bottom_section').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
-          $(this).delay(3200).fadeOut('slow')
-        }));
-        $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-        calcPosition();
-        $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
-      }
-      pictureQueue.shift()
-      counter++
-      if (pictureQueue.length > 0) {
-        setTimeout(addImages, 3000)
-      }
-    }
-  })
-
+  
     DZ.init({
       appId  : '190182',
       channelUrl : 'https://example@example.com',
@@ -232,6 +233,15 @@
       var left = evt.offsetX;
       DZ.player.seek((evt.offsetX/$(this).width()) * 100);
     });
+
+    // function checkIfPlaylistEmpty(track_id, track_image) {
+    //   var next_track_id = $("#mainPlaylist tbody tr:nth-child(2)")
+    //   var current_track = $("#currentTrack").text()
+
+    //   if ( (next_track_id.length == 0) && (current_track.length == 0) ) {
+    //     startPlayer(track_id, track_image); 
+    //   } 
+    // }
 
     function loadTrackImage(track_image){
       $('.album_art > img').fadeOut(2000, function() {
@@ -280,14 +290,14 @@
         $("#slider_seek").find('.bar').css('width', (100*arg[0]/arg[1]) + '%');
       });
     }
-      
-    </script>
-    <script src="tablesort.min.js"></script>
-    <script src="tablesort.number.js"></script>
-    <script>
-      sort = new Tablesort(document.getElementById('mainPlaylist'), {
-        descending: true
-      });
-    </script>
+    
+  </script>
+  <script src="tablesort.min.js"></script>
+  <script src="tablesort.number.js"></script>
+  <script>
+    sort = new Tablesort(document.getElementById('mainPlaylist'), {
+      descending: true
+    });
+  </script>
   </body>
 </html>
