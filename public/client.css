@@ -217,6 +217,11 @@ th.img_td_2 {
   width: 61%;
 }
 
+button.down, button.up {
+  background: none;
+  border: none;
+}
+
 /*
 tr {
   vertical-align: center;
