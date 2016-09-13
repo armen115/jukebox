@@ -8,23 +8,44 @@
 	<div id="main" class="container">
 		<h1>Setup</h1>
 		<h4>Please select any additional modifications you would like to make to your jukebox</h4>
-		<p>Custom Logo</p>
-		<div id="pictureDiv">
-	    <form id="uploadForm" enctype="multipart/form-data" action="/setup" method="post">
-	      <input type="file" id="picture_select" name="setupPhoto" class="hidden" />
-	      <label for="picture_select" id="picture_select_label">Select file</label>
-	      <input id="picture_select_submit" type="submit" value="Upload Image" name="submit">
-	    </form>
-    </div>
-		<p>Genre Limitations</p>
+		<div class="row">
+			<div class="col-md-6">
+				<h4 id="custom_logo_text">Upload your own logo</h4>
+				<div class="pictureDiv">
+			    <form id="logo_form" enctype="multipart/form-data" action="/setup" method="post">
+			      <input type="file" id="picture_select" name="setupPhoto" class="hidden" />
+		      	<label for="picture_select" id="picture_select_label">
+		        	<img class="camera_icon" src="/images/camera-black.ico">
+		      	</label>	      
+		      	<input id="picture_select_submit" type="submit" value="Upload" name="submit">
+			    	</form>
+			    	<p id="logo_error"></p>
+				</div>
+			</div>
+
+				<div class="col-md-6">
+					<h4 id="custom_logo_text">Upload a your own wallpaper</h4>
+					<div class="pictureDiv">
+			    <form id="wallpaper_form" enctype="multipart/form-data" action="/setup" method="post">
+			      <input type="file" id="picture_select" name"=setupPhoto" class="hidden" />
+		      	<label for="picture_select" id="picture_select_label">
+		        	<img class="camera_icon" src="/images/camera-black.ico">
+		      	</label>	      
+		      	<input id="picture_select_submit" type="submit" value="Upload" name="submit">
+			    	</form>
+			    	<p id="wallpaper_error"></p>
+					</div>
+				</div>	    
+	    </div>
+	  </div>
 	</div>
 	<script>
 	$(document).ready(function(){
-		$('#uploadForm').submit(function(e) {
+		$('#logo_form').submit(function(e) {
 	  // $(this).hide()
 	  e.preventDefault();
 	  if ( $('#picture_select').get(0).files.length == 0) {
-	    alert('You cant upload an empty file!')
+	    $('#logo_error').append('You cant upload an empty file!')
 	  } else {
 	    $.ajax({
 	      url: '/setup',
@@ -36,8 +57,28 @@
 	        console.log('Upload complete!')
 	      }
 	    });
-	  }
+	  	}
 	 });
+
+		$('#wallpaper_form').submit(function(e) {
+	  // $(this).hide()
+	  e.preventDefault();
+	  if ( $('#picture_select').get(0).files.length == 0) {
+	    $('#wallpaper_error').append('You cant upload an empty file!')
+	  } else {
+	    $.ajax({
+	      url: '/setup',
+	      type: 'POST',
+	      data: new FormData( this ),
+	      processData: false,
+	      contentType: false,
+	      success: function(data){
+	        console.log('Upload complete!')
+	      }
+	    });
+	  	}
+	 	});
+
 	})
 	</script>
 	</body>

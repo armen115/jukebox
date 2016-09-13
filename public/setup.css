@@ -1,41 +1,55 @@
 html {
+  height: 100%;
 
 }
 
 body { 
-  background: url(images/bg3.jpg) no-repeat center center fixed; 
+  background: url(images/bg5.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  height: 100%;
+}
+
+h1, h4 {
+	color: #737373;
 }
 
 #main {
 	margin: 75px auto;
 	text-align: center;
-	width: 50%;
+	width: 40%;
 	border: 1px solid #bbb;
 	padding: 18px;
-	background-color: #f1f1f1;
+	background-color: white;
+	border-radius: 14px;
 }
 
 #uploadForm {
 /*	margin-top: 30px;
 */}
 
-#pictureDiv {
+.pictureDiv {
 	text-align: center;
 }
 
-#picture_select {
-}
-
-#picture_select_label {
-	
+.camera_icon {
+	margin: 15px;
+	height: 70px;
+	width: 70px;
 }
 
 #picture_select_submit {
 	margin: 0 auto;
 	display: block;
+	border: none;
+	padding: 12px;
+	width: 120px;
+	border-radius: 3px;
+	color: white;
+	background-color: #1abc9c;
+}
+
+#custom_logo_text {
+	margin-top: 25px;
 }

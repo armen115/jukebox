@@ -13,15 +13,20 @@ audio {
 #picture_select_submit {
 	border: none;
 	padding: 12px;
+	width: 100px;
 	border-radius: 3px;
 	color: white;
 	background-color: #1abc9c;
 }
 
 #picture_select_label {
-	margin-bottom: 12px;
+	margin-bottom: 18px;
 }
 
+#camera_icon {
+	height: 70px;
+	width: 70px;
+}
 
 #message_form {
 	display: none;
