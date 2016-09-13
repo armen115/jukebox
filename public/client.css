@@ -34,12 +34,13 @@ audio {
 }
 
 td {
-	width: 25%;
+	/*width: 15%;*/
+  border: 0px;
 }
 
 #nickname {
 	margin: 0 auto;
-	width: 60%
+	width: 30%
 }
 
 .headline, #nickname_form, #users {
@@ -68,8 +69,8 @@ table {
 }
 
 #pButton{
-  height:25px;
-  width: 25px;
+  height:40px;
+  width: 40px;
   border: none;
   background-size: 50% 50%;
   background-repeat: no-repeat;
@@ -78,11 +79,17 @@ table {
 }
 
 .play{
-  background: url('http://www.alexkatz.me/codepen/images/play.png');
+  width: 30px;
+  height: 30px;
+  background-color: none;
+  background: url('images/play.png');
 }
 
 .pause{
-  background: url('http://www.alexkatz.me/codepen/images/pause.png');
+  width: 30px;
+  height: 30px;
+  background-color: none;
+  background: url('images/pause.png');
 }
 
 #welcome_h1 {
@@ -116,3 +123,97 @@ table {
 	border: 2px solid #aaa;
 	/*animation: growShake 1s infinite;*/
 }
+
+td.img_td {
+  width: 50px;
+  height: 68px;
+  margin: 0px;
+  padding: 0px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+td.button_td {
+  width: 50px;
+  height: 68px;
+  margin: 0px;
+  padding: 0px;
+  vertical-align: middle;
+}
+
+.table>tbody>tr>td {
+  padding: 0px;
+  vertical-align: middle;
+}
+
+.tr_title {
+  overflow: scroll;
+}
+
+.addButtonImages {
+  width: 30px;
+  height: 30px;
+  background-color: none;
+  background-repeat: no-repeat;
+}
+
+.addButton {
+  background: none;
+  border: none;
+}
+
+ul {
+  vertical-align: middle;
+}
+
+.disabledButton {
+  opacity: 0.4;
+}
+
+img.resize {
+  width: 50px;
+  height: 68px;
+  margin: 0px;
+  padding: 0px;
+  vertical-align: middle;
+}
+
+.badge {
+  /*background-color: red;
+  border-radius: 20px;
+  font-size: 20px;*/
+  padding: 1px 9px 2px;
+  font-size: 15x;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: #468847;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 50px;
+}
+
+td.img_td_2 {
+  width: 35px;
+  height: 68px;
+  margin: 0px;
+  padding: 0px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/*
+tr {
+  vertical-align: center;
+}
+
+
+
+.button_td {
+  width: 20px;
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  vertical-align: center;
+}*/
+

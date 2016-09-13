@@ -36,13 +36,12 @@ $(document).ready(function() {
 
   disableButton = function(e) {
     e.disabled = true;
-    e.innerHTML = "Added to playlist";
-    e.setAttribute("class", "btn btn-success btn-xs");
+    e.innerHTML =`<img class="addButtonImages disabledButton" src="images/success.png"/></button>`;
   }
 
   trackExisting = function(e) {
-    e.innerHTML = "Already in the playlist!";
-    e.setAttribute("class", "btn btn-warning btn-xs");
+    e.disabled = true;
+    e.innerHTML =`<img class="addButtonImages disabledButton" src="images/music.png"/></button>`;
   }
 
   $('#tableSearchResults').on('click', '.addButton', function(e){ 
@@ -53,21 +52,25 @@ $(document).ready(function() {
     var artist = track.artist.name;
     var track_image = track.album.cover_medium;
 
-    var addPlaylistButton = `<button data-track-title="${track.title_short}" data-track-id=${track.id} data-artist="${artist}" data-track-image="${track_image}" class="btn btn-danger btn-xs addButton">Add to Playlist</button>`;
+    var addPlaylistButton = `<button data-track-title="${track.title_short}" data-track-id=${track.id} data-artist="${artist}" data-track-image="${track_image}" class="addButton"><img class="addButtonImages" src="images/plus.png"/></button>`;
 
     var resultRow = `<tr id="${track.id}">
-                     <td class="text-center">${track.title_short}</td>
-                     <td class="text-center">${artist}</<td>
-                     <td class="text-center">
-                       <button track=${track.id} class="play" id="pButton"></button>
-                       <audio id="music" track=${track.id} controls="controls" style="visibility: hidden;width: 1px;height: 1px;">
-                        <source src="${track.preview}" type="audio/ogg">
-                        <source src="${track.preview}" type="audio/mpeg">
-                       </audio>
-                     </td>
-                     <td class="text-center">${addPlaylistButton}</td>
+                       <td><img src="${track.album.cover_small}" class="img-responsive img-circle"></img></td>
+                       <td colspan="3">
+                        <ul class="list-unstyled">
+                          <div class="tr_title"><li class="text-left">${track.title_short}</li></div>
+                          <li class="ext-left"><small>${artist}</small></li>
+                        </ul>
+                       </td>
+                       <td class="text-center button_td">
+                         <button track=${track.id} class="play" id="pButton"></button>
+                         <audio id="music" track=${track.id} controls="controls" style="visibility: hidden;width: 1px;height: 1px;">
+                          <source src="${track.preview}" type="audio/ogg">
+                          <source src="${track.preview}" type="audio/mpeg">
+                         </audio>
+                       </td>
+                       <td class="img_td">${addPlaylistButton}</td>
                      </tr>`;
-
     $('#searchResults').append(resultRow);
   }
 
@@ -136,10 +139,10 @@ $(document).ready(function() {
   });
 
   socket.on('refresh button', function(track_id){
-    let $buttonToBeRefreshed = $(`#${track_id} td:nth-child(4) > button`);
+    var $buttonToBeRefreshed = $(`#searchResults > tr#${track_id} > td:nth-child(4) > button`);
+    var $iconToBeRefreshed = $(`#searchResults > tr#${track_id} > td:nth-child(4) > button > img`);
+    $iconToBeRefreshed.attr({src: "images/plus.png", class: "addButtonImages"})
     $buttonToBeRefreshed.prop('disabled', false);
-    $buttonToBeRefreshed.removeClass();
-    $buttonToBeRefreshed.addClass('btn btn-danger btn-xs addButton').html("Add to Playlist");
   })
 
   $('#tableSearchResults').on('click', '#pButton', function(){
@@ -170,28 +173,28 @@ $(document).ready(function() {
     $('#pictureDiv').show()
   }
 
- $('#mainSearchTab').on('click', searchForTracks)
- $('#mainVoteTab').on('click', displayTablePlaylist)
- $('#mainPictureTab').on('click', hideAll)
+  $('#mainSearchTab').on('click', searchForTracks)
+  $('#mainVoteTab').on('click', displayTablePlaylist)
+  $('#mainPictureTab').on('click', hideAll)
 
- $('#uploadForm').submit(function(e) {
-  // $(this).hide()
-  e.preventDefault();
-  if ( $('#picture_select').get(0).files.length == 0) {
-    alert('You cant upload an empty file!')
-  } else {
-    $.ajax({
-      url: '/uploads',
-      type: 'POST',
-      data: new FormData( this ),
-      processData: false,
-      contentType: false,
-      success: function(data){
-        console.log('Upload complete!')
-      }
-    });
-  }
- });
+  $('#uploadForm').submit(function(e) {
+    // $(this).hide()
+    e.preventDefault();
+    if ( $('#picture_select').get(0).files.length == 0) {
+      alert('You cant upload an empty file!')
+    } else {
+      $.ajax({
+        url: '/uploads',
+        type: 'POST',
+        data: new FormData( this ),
+        processData: false,
+        contentType: false,
+        success: function(data){
+          console.log('Upload complete!')
+        }
+      });
+    }
+  });
 
 });
 
