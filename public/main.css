@@ -98,7 +98,8 @@ hr {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;*/
   margin-top: -50px;
-  border: 10px solid #8A0707;
+  border: 10px solid #1abc9c;
+  /*8A0707*/
 }
 
 .table>thead>tr>th {

@@ -13,9 +13,7 @@
 
     <img id='mic' src='/images/mic.png'>
     <!-- <h1 class="headline">Jukebox</h1> -->
-    <ul id="chat_area">
-     
-    </ul>
+    
     <form id="nickname_form">
       <label>Nickname:</label>
       <input id="nickname" type="text" class="form-control">
@@ -35,7 +33,7 @@
     </div>
 
     <div id="autocomplete" class="center-block" style="margin-top: 20px; margin-bottom: 20px;">
-        <input id="search" placeholder="Search for Tracks" class="center-block form-control"></input>
+      <input id="search" placeholder="Search for Tracks" class="center-block form-control"></input>
     </div>
 
     <h1 id="welcome_h1">Welcome! Hit a tab to get started</h1>
@@ -50,16 +48,23 @@
     <p id="message"></p>
     </div>
 
-    <table id="tablePlaylist" class="table-condensed table table-striped col-md-12">
+    <table id="tablePlaylist" class="table-condensed table table-striped col-xs-12">
+      <thead>
+        <tr>
+          <th class="track_info_voting"></th>
+          <th class="img_td_2"></th>
+          <th class="img_td_2"></th>
+          <th class="img_td_2 sort-default"></th>  
+        </tr>
+      </thead>
       <tbody id="playlist">
       </tbody>
     </table>  
 
-    <table id="tableSearchResults" class="table-condensed table table-striped col-md-12">
+    <table id="tableSearchResults" class="table-condensed table table-striped col-xs-12">
       <tbody id="searchResults">
       </tbody>
     </table>
-    
   </div>
 
   <hr>
@@ -84,29 +89,13 @@
     })
 
     socket.on('broadcast track', function(user_name, track_id, track_title, artist, track_image){
-      // var playlistRow = `<tr id="${track_id}">
-      //                    <td class="text-center">${track_title}</td>
-      //                    <td class="text-center">${artist}</<td>
-      //                    <td class="text-center">0</td>
-      //                    <td>
-      //                     <button class="btn btn-primary up">Vote up</button>
-      //                     <button class="btn btn-warning down">Vote down</button>
-      //                    </td>
-      //                    </tr>`;
-
-
+  
       var playlistRow = `<tr id="${track_id}">
-                           
-                           <td colspan="4">
-
+                           <td class="track_info_voting">
                             <ul class="list-unstyled">
-
                               <div class="tr_title"><li class="text-left">${track_title}</li></div>
                               <li class="ext-left"><small>${artist}</small></li>
                             </ul>
-                           </td>
-                           <td class="img_td_2">
-                            <span class="badge badge-success">12</span>
                            </td>
                            <td class="img_td_2">
                             <button class="up"><img class="addButtonImages" src="images/thumbs_up.png"/></button>
@@ -114,25 +103,25 @@
                            <td class="img_td_2">
                             <button class="down"><img class="addButtonImages" src="images/thumbs_down.png"/></button>
                            </td>
+                           <td class="img_td_2">
+                            <span class="label label-success">0</span>
+                           </td>
                          </tr>`;
-
-
-
 
       $('#playlist').append(playlistRow);
     })
 
     socket.on('increase votes', function(user_name, track_id){
-      var id = $(`#${track_id}`).children().last().prev().html();
-      id = Number(id) + 1 
-      $(`#${track_id}`).children().last().prev().html(id);
+      var votes = $(`tr#${track_id} td:nth-child(4)>span`).text();
+      votes = Number(votes) + 1 
+      $(`tr#${track_id} td:nth-child(4)>span`).html(votes);
       sort.refresh()
     })
 
     socket.on('decrease votes', function(user_name, track_id){
-      var id = $(`#${track_id}`).children().last().prev().html();
-      id = Number(id) - 1 
-      $(`#${track_id}`).children().last().prev().html(id);
+      var votes = $(`tr#${track_id} td:nth-child(4)>span`).text();
+      votes = Number(votes) - 1 
+      $(`tr#${track_id} td:nth-child(4)>span`).html(votes);
       sort.refresh()
     })
 

@@ -8,11 +8,22 @@ $(document).ready(function() {
     success: function(response){
       response.forEach(function(json){
         var row = `<tr id="${json.track_id}">
-                   <td class="text-center">${json.track_name}</td>
-                   <td class="text-center">${json.track_artist}</<td>
-                   <td class="text-center">${json.votes}</td>
-                   <td><button class="btn btn-primary up">Vote up</button><button class="btn btn-warning down">Vote down</button></td>
-                   </tr>`;
+                     <td class="track_info_voting">
+                      <ul class="list-unstyled">
+                        <div class="tr_title"><li class="text-left">${json.track_name}</li></div>
+                        <li class="ext-left"><small>${json.track_artist}</small></li>
+                      </ul>
+                     </td>
+                     <td class="img_td_2">
+                      <button class="up"><img class="addButtonImages" src="images/thumbs_up.png"/></button>
+                     </td>
+                     <td class="img_td_2">
+                      <button class="down"><img class="addButtonImages" src="images/thumbs_down.png"/></button>
+                     </td>
+                     <td class="img_td_2">
+                      <span class="label label-success">${json.votes}</span>
+                     </td>
+                   </tr>`;            
         $('#playlist').append(row)
       })
     }
@@ -116,26 +127,29 @@ $(document).ready(function() {
   }
 
   $('#tablePlaylist').on('click', '.up', function(){
-    var track_id = this.parentElement.parentElement.getAttribute('id')
-    var track_name = $(`tr#${track_id} td:nth-child(1)`).first().text()
-    var artist = $(`tr#${track_id} td:nth-child(2)`).first().text()
+    var track_id = this.parentElement.parentElement.getAttribute('id');
+    var track_name = $(`tr#${track_id} td:nth-child(1)>ul>div>li`).text();
+    var artist = $(`tr#${track_id} td:nth-child(1)>ul>li`).text()
 
     socket.emit('upvote', track_id, track_name, artist)
     this.disabled = true;
+    this.children[0].className += " disabledButton";
   });
 
   $('#tablePlaylist').on('click', '.down', function(){    
     var track_id = this.parentElement.parentElement.getAttribute('id')
-    var track_name = $(`tr#${track_id} td:nth-child(1)`).first().text()
-    var artist = $(`tr#${track_id} td:nth-child(2)`).first().text()
-    var currentVotes = $(`tr#${track_id} td:nth-child(3)`).text()
+    var track_name = $(`tr#${track_id} td:nth-child(1)>ul>div>li`).text();
+    var artist = $(`tr#${track_id} td:nth-child(1)>ul>li`).text()
+    var currentVotes = $(`tr#${track_id} td:nth-child(4)>span`).text()
 
     if (currentVotes > 0) { 
       socket.emit('downvote', track_id, track_name, artist)
       this.disabled = true;
+      this.children[0].className += " disabledButton";
     } else if (currentVotes == 0) {
       this.disabled = true;
-     }  
+      this.children[0].className += " disabledButton";
+    }  
   });
 
   socket.on('refresh button', function(track_id){

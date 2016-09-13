@@ -189,28 +189,32 @@ img.resize {
   vertical-align: middle;
 }
 
-.badge {
-  /*background-color: red;
-  border-radius: 20px;
-  font-size: 20px;*/
-  padding: 1px 9px 2px;
-  font-size: 15x;
-  font-weight: bold;
-  white-space: nowrap;
-  color: #ffffff;
-  background-color: #468847;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-  border-radius: 50px;
-}
-
+/*client vote table*/
 td.img_td_2 {
-  width: 35px;
+  width: 13%;
   height: 68px;
   margin: 0px;
   padding: 0px;
   vertical-align: middle;
   text-align: center;
+}
+
+th.img_td_2 {
+  width: 13%;
+}
+
+#tablePlaylist>tr>th {
+  display: none;
+}
+
+.label {
+  border-radius: 100%;
+  font-size: 15px;
+  background-color: #1abc9c;
+}
+
+.track_info_voting {
+  width: 61%;
 }
 
 /*

@@ -23,7 +23,6 @@
         <div class="album_art">
           <img src="" id="current_track_image">
         </div>
-        <!-- album art slider here -->
         <!-- displays the current track playing -->
         <div id="currentTrackDiv"><span id="currentTrack"></span></div>
 
@@ -133,7 +132,7 @@
       $('#mainPlaylistRow').append(row)
       addToActivityFeed('added', user_name, track_id, track_name, artist);
       // checkIfPlaylistEmpty(track_id, track_image)
-    })
+    });
    
     socket.on('increase votes', function(user_name, track_id, track_name, artist){
       addToActivityFeed('liked', user_name, track_id, track_name, artist);
