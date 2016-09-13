@@ -158,6 +158,7 @@ td.button_td {
 
 .tr_title {
   overflow: scroll;
+  overflow: hidden;
 }
 
 .addButtonImages {
