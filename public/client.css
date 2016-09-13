@@ -130,7 +130,8 @@ table {
 }
 
 #message {
-	color: black;
+  color: #8da4ff;
+  font-weight: 600;
 	margin-top: 16px;
 }
 
@@ -157,7 +158,7 @@ td.button_td {
 }
 
 .tr_title {
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .addButtonImages {
