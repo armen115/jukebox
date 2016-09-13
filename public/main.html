@@ -37,9 +37,9 @@
         <table id="mainPlaylist" class="table table-striped col-sm-12" >
           <thead>
             <tr>
-              <th class="text-center">Track Name</th>
-              <th class="text-center">Artist</th>
-              <th class="text-center sort-default">Votes</th>  
+              <th class="track_image_main"></th>
+              <th class="track_info_main"></th>
+              <th class="tr_votes_main sort-default"></th>  
             </tr>
           </thead>
           <tbody id="mainPlaylistRow">
@@ -70,10 +70,22 @@
         success: function(response){
           response.forEach(function(json){
             var row = `<tr data-track-image="${json.track_image}" id="${json.track_id}">
-                       <td class="center-align">${json.track_name}</td>
-                       <td class="center-align">${json.track_artist}</<td>
-                       <td class="center-align">${json.votes}</td>
+                        <td class="track_image_main">
+                          <img class="addButtonImages" src="${json.track_image}"/>
+                        </td>
+
+                        <td class="track_info_main">
+                          <ul class="list-unstyled">
+                            <div class="tr_title_main"><h5><li class="text-left">${json.track_name}</li><h5></div>
+                            <li class="text-left"><h6>${json.track_artist}</h6></li>
+                          </ul>
+                        </td>
+
+                        <td class="tr_votes_main">
+                          <span class="label label_main label-success">${json.votes}</span>
+                        </td>
                        </tr>`;
+
             $('#mainPlaylistRow').append(row)
           })
           sort.refresh()
@@ -125,10 +137,22 @@
 
     socket.on('broadcast track', function(user_name, track_id, track_name, artist, track_image){
       var row = `<tr data-track-image="${track_image}" id="${track_id}">
-                 <td class="center-align">${track_name}</td>
-                 <td class="center-align">${artist}</<td>
-                 <td class="center-align">0</td>
-                 </tr>`;
+                        <td class="track_image_main">
+                          <img class="addButtonImages" src="${track_image}"/>
+                        </td>
+
+                        <td class="track_info_main">
+                          <ul class="list-unstyled">
+                            <div class="tr_title_main"><h5><li class="text-left">${track_name}<h5></li></div>
+                            <li class="text-left"><h6>${artist}</h6></li>
+                          </ul>
+                        </td>
+
+                        <td class="tr_votes_main">
+                          <span class="label label_main label-success">0</span>
+                        </td>
+                       </tr>`;
+
       $('#mainPlaylistRow').append(row)
       addToActivityFeed('added', user_name, track_id, track_name, artist);
       // checkIfPlaylistEmpty(track_id, track_image)
@@ -136,15 +160,15 @@
    
     socket.on('increase votes', function(user_name, track_id, track_name, artist){
       addToActivityFeed('liked', user_name, track_id, track_name, artist);
-      var id = $(`#${track_id}`).children().last().html();
-      var id = Number(id) + 1 
-      $(`#${track_id}`).children().last().html(id)
+      var votes = $(`#mainPlaylistRow>tr#${track_id}>td:nth-child(3)>span`).text()
+      var votes = Number(votes) + 1
+      $(`#mainPlaylistRow>tr#${track_id}>td:nth-child(3)>span`).text(votes) 
     })
     socket.on('decrease votes', function(user_name, track_id, track_name, artist){
       addToActivityFeed('disliked', user_name, track_id, track_name, artist);
-      var id = $(`#${track_id}`).children().last().html();
-      var id = Number(id) - 1 
-      $(`#${track_id}`).children().last().html(id)
+      var votes = $(`#mainPlaylistRow>tr#${track_id}>td:nth-child(3)>span`).text()
+      var votes = Number(votes) - 1
+      $(`#mainPlaylistRow>tr#${track_id}>td:nth-child(3)>span`).text(votes)
     })
     socket.on('send names', function(name, id){
       $('#users').append(`<p data-id=${id}>${name} </p>`)

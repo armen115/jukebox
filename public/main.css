@@ -112,6 +112,55 @@ hr {
   overflow-y: hidden;
 }
 
+.track_info_main {
+  width: 50%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.tr_votes_main > img {
+  width: 20%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.track_image_main {
+  width: 30%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.track_image_main > img {
+  height: 70px;
+  width: 70px;
+}
+
+.tr_title_main {
+  overflow: hidden;
+}
+
+.label_main {
+  border-radius: 100%;
+  font-size: 20px;
+  background-color: #1abc9c;
+}
+
+.table>tbody>tr>td {
+  height: 75px;
+  margin: 0px;
+  padding: 0px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+tr {
+  width: 100%;
+}
+
+#mainPlaylist>tr>th {
+  display: none;
+}
+
 /*
 img {
   width: 150px;
