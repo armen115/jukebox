@@ -25,10 +25,6 @@ h1, h4 {
 	border-radius: 14px;
 }
 
-#uploadForm {
-/*	margin-top: 30px;
-*/}
-
 .pictureDiv {
 	text-align: center;
 }
@@ -39,7 +35,7 @@ h1, h4 {
 	width: 70px;
 }
 
-#picture_select_submit {
+.picture_select_submit {
 	margin: 0 auto;
 	display: block;
 	border: none;
@@ -50,6 +46,12 @@ h1, h4 {
 	background-color: #1abc9c;
 }
 
-#custom_logo_text {
+.custom_logo_text {
 	margin-top: 25px;
+}
+  
+.message {
+  color: grey;
+  font-weight: 600;
+	margin-top: 16px;
 }

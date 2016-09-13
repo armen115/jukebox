@@ -10,30 +10,30 @@
 		<h4>Please select any additional modifications you would like to make to your jukebox</h4>
 		<div class="row">
 			<div class="col-md-6">
-				<h4 id="custom_logo_text">Upload your own logo</h4>
+				<h4 class="custom_logo_text">Upload your own logo</h4>
 				<div class="pictureDiv">
-			    <form id="logo_form" enctype="multipart/form-data" action="/setup" method="post">
-			      <input type="file" id="picture_select" name="setupPhoto" class="hidden" />
-		      	<label for="picture_select" id="picture_select_label">
+			    <form id="logo_form" enctype="multipart/form-data" action="/setupLogo" method="post">
+			      <input type="file" id="picture_select_logo" name="setupPhoto" class="hidden" />
+		      	<label for="picture_select_logo" id="picture_select_label">
 		        	<img class="camera_icon" src="/images/camera-black.ico">
-		      	</label>	      
-		      	<input id="picture_select_submit" type="submit" value="Upload" name="submit">
+		      	</label>
+		      	<input class="picture_select_submit" type="submit" value="Upload" name="submit_logo">
 			    	</form>
-			    	<p id="logo_error"></p>
+			    	<p id="logo_message" class="message"></p>
 				</div>
 			</div>
 
 				<div class="col-md-6">
-					<h4 id="custom_logo_text">Upload a your own wallpaper</h4>
+					<h4 class="custom_logo_text">Upload a your own wallpaper</h4>
 					<div class="pictureDiv">
-			    <form id="wallpaper_form" enctype="multipart/form-data" action="/setup" method="post">
-			      <input type="file" id="picture_select" name"=setupPhoto" class="hidden" />
-		      	<label for="picture_select" id="picture_select_label">
+			    <form id="wallpaper_form" enctype="multipart/form-data" action="/setupWallpaper" method="post">
+			      <input type="file" id="picture_select_wallpaper" name="setupPhoto" class="hidden" />
+		      	<label for="picture_select_wallpaper" id="picture_select_label2">
 		        	<img class="camera_icon" src="/images/camera-black.ico">
 		      	</label>	      
-		      	<input id="picture_select_submit" type="submit" value="Upload" name="submit">
+		      	<input class="picture_select_submit" type="submit" value="Upload" name="submit_wallpaper">
 			    	</form>
-			    	<p id="wallpaper_error"></p>
+			    	<p id="wallpaper_message" class="message"></p>
 					</div>
 				</div>	    
 	    </div>
@@ -44,17 +44,21 @@
 		$('#logo_form').submit(function(e) {
 	  // $(this).hide()
 	  e.preventDefault();
-	  if ( $('#picture_select').get(0).files.length == 0) {
-	    $('#logo_error').append('You cant upload an empty file!')
+	  if ( $('#picture_select_logo').get(0).files.length == 0) {
+    	$('#logo_message').empty().append("You can't upload an empty file!").hide().fadeIn('slow', function(){
+			$(this).delay(1000).fadeOut('slow')
+      });
 	  } else {
 	    $.ajax({
-	      url: '/setup',
+	      url: '/setupLogo',
 	      type: 'POST',
 	      data: new FormData( this ),
 	      processData: false,
 	      contentType: false,
 	      success: function(data){
-	        console.log('Upload complete!')
+	   				$('#logo_message').empty().append("Upload complete!").hide().fadeIn('slow', function(){
+						$(this).delay(1000).fadeOut('slow')
+      		});	  
 	      }
 	    });
 	  	}
@@ -63,17 +67,21 @@
 		$('#wallpaper_form').submit(function(e) {
 	  // $(this).hide()
 	  e.preventDefault();
-	  if ( $('#picture_select').get(0).files.length == 0) {
-	    $('#wallpaper_error').append('You cant upload an empty file!')
-	  } else {
+	  if ( $('#picture_select_wallpaper').get(0).files.length == 0) {
+    	$('#wallpaper_message').empty().append("You can't upload an empty file!").hide().fadeIn('slow', function(){
+			$(this).delay(1000).fadeOut('slow')
+      });	  
+    } else {
 	    $.ajax({
-	      url: '/setup',
+	      url: '/setupWallpaper',
 	      type: 'POST',
 	      data: new FormData( this ),
 	      processData: false,
 	      contentType: false,
 	      success: function(data){
-	        console.log('Upload complete!')
+	   				$('#wallpaper_message').empty().append("Upload complete!").hide().fadeIn('slow', function(){
+						$(this).delay(1000).fadeOut('slow')
+      		});	  
 	      }
 	    });
 	  	}

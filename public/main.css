@@ -1,31 +1,31 @@
 /*html {
-	height: 100%;
-	margin: 0;
-	padding: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }*/
 
 body { 
-  background: url(/images/bg5.jpg) no-repeat center center fixed; 
+  background: url(/images/setupPhoto-1473793232871.jpeg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   height: 100%;
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 /*#wrapper {
-	width: 100%;
+  width: 100%;
 }*/
 
 @keyframes growShake {
-	from {
-		transform: scale(1);
-	}
-	to {
-		transform: scale(1.1);
-	}
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 /*current track pulsing animation*/
@@ -47,50 +47,50 @@ body {
 }
 
 #mic {
-	position: relative;
-	top: -65px;
-	height: 100px;
-	width: 100px;
-	border-radius: 50%;
-	background-color: white;
-	border: 2px solid #aaa;
-	/*animation: growShake 1s infinite;*/
+  position: relative;
+  top: -65px;
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid #aaa;
+  /*animation: growShake 1s infinite;*/
 }
 
 #main {
-	margin-top: 60px;
-	text-align: center;
-	border: 1px solid #bbb;
-	padding: 18px;
-	background-color: #fff4f4;
-	border-radius: 5%;
+  margin-top: 60px;
+  text-align: center;
+  border: 1px solid #bbb;
+  padding: 18px;
+  background-color: #fff4f4;
+  border-radius: 5%;
 }
 
 #bottom_section {
-	position: fixed;
+  position: fixed;
   width: 100%;
   left: 0;
   height: 100%
 }
 
 td {
-	width: 33.333%;
+  width: 33.333%;
 }
 
 hr {
-	border-top: 1px solid #bdbdbd;
+  border-top: 1px solid #bdbdbd;
 }
 
 #users > p {
-	display: inline;
+  display: inline;
 }
 
 #dz-root {
-	display: none;
+  display: none;
 }
 
 #currentTrack {
-	/*animation: pulse 1s infinite;*/
+  /*animation: pulse 1s infinite;*/
 }
 
 .album_art > img {
@@ -98,17 +98,18 @@ hr {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;*/
   margin-top: -50px;
-  border: 10px solid #8A0707;
+  border: 10px solid #1abc9c;
+  /*8A0707*/
 }
 
 .table>thead>tr>th {
-	border-bottom: 2px solid #ededed;
+  border-bottom: 2px solid #ededed;
 }
 
 #mainPlaylist {
   display: block;
   max-height: 400px;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
 /*

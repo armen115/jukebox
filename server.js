@@ -64,24 +64,59 @@ app.post('/uploads', function(req, res){
 	})	
 })
 
-app.post('/setup', function(req, res){
+app.post('/setupWallpaper', function(req, res){
+	setupUpload(req, res, function(err){
+		console.log(req['file']['filename'])
+		if (err){
+			return res.end('Error uploading file.')
+		}
+		var newString = "background: url(/images/" + req['file']['filename'] + ") no-repeat center center fixed;" 
+		res.sendStatus(200)
+		fs.readFile('public/main.css', 'utf8', function(err, data){
+		var result = data.replace(/background: url\(\/images\/.+\) no-repeat center center fixed;/g, newString )
+			if (err) {
+				console.log(err)
+			}
+			fs.writeFile('public/main.css', result, 'utf8', function(err){
+				if (err){
+					console.log(err)
+				}
+				console.log("done")
+			})
+		})
+	})
+})
+
+app.post('/setupLogo', function(req, res){
+	
 	setupUpload(req, res, function(err){
 		if (err){
 			return res.end('Error uploading file.')
 		}
+		var newString = ("<img id='mic' src='/images/" + req['file']['filename'] + "'>")
 		res.sendStatus(200)
 		fs.readFile('public/main.html', 'utf8', function(err, data){
+		var result = data.replace(/<img id='mic' src='.+'>/g, newString )
 			if (err) {
 				console.log(err)
 			}
-			newString = ("<img id='mic' src='/images/" + req['file']['filename'] + "'>")
-			var result = data.replace(/<img id='mic' src='.+'>/g, newString )
 			fs.writeFile('public/main.html', result, 'utf8', function(err){
 				if (err){
 					console.log(err)
 				}
 			})
 		})
+		fs.readFile('public/client.html', 'utf8', function(err, data){
+		var result = data.replace(/<img id='mic' src='.+'>/g, newString )
+			if (err){
+				console.log(err)
+			}
+			fs.writeFile('public/client.html', result, 'utf8', function(err){
+				if (err){
+					console.log(err)
+				}
+			})
+		})	
 	})	
 })
 
