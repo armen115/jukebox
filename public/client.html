@@ -90,6 +90,13 @@
       $(`p[data-id=${id}]`).remove();
     })
 
+    socket.on('populate names', function(names){
+      $('#users').empty()
+      for(var i = 0; i < names.length; i++){
+        $('#users').append(`<p data-id=${names[i]["id"]}>${names[i]["name"]} </p>`)
+      }
+    })
+
     socket.on('broadcast track', function(user_name, track_id, track_title, artist, track_image){
   
       var playlistRow = `<tr id="${track_id}">

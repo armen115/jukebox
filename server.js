@@ -140,6 +140,7 @@ currentUsers = []
 io.on('connection', function(socket){
 	console.log('A user has connected')
   io.emit('user connected', null)
+  io.emit('populate names', currentUsers)
 	
 	function getUserInfo() {
 		var name, id;
@@ -157,7 +158,13 @@ io.on('connection', function(socket){
 
 	socket.on('disconnect', function(){
 		var user = getUserInfo();
+		for (var i = 0; i < currentUsers.length; i++){
+			if (currentUsers[i]["id"] == user.id){
+				currentUsers.splice(i, 1)
+			}
+		}
 		console.log(user.name + ' disconnected')
+		io.emit('populate names', currentUsers)
 		io.emit('delete name', user.name, user.id)
 	})
 

@@ -107,17 +107,17 @@
     function userStatus(status, user_name) {
       var user_name = user_name || "A user";
       if (status == true) {
-        $('#activity_feed > p').fadeOut(2000, function() {
+        $('#activity_feed > p').fadeOut(1000, function() {
           $(this).remove();
-          $('#activity_feed').append(`<p>${user_name} is now connected</p>`).hide().fadeIn(2000, function(){
-            $(this).fadeOut(2000);
+          $('#activity_feed').append(`<p>${user_name} is now connected</p>`).hide().fadeIn(1000, function(){
+            $(this).fadeOut(1000);
           });
         })
       } else if (status == false) {
-        $('#activity_feed > p').fadeOut(2000, function() {
+        $('#activity_feed > p').fadeOut(1000, function() {
           $(this).remove();
-          $('#activity_feed').append(`<p>${user_name} is now disconnected</p>`).hide().fadeIn(2000, function(){
-            $(this).fadeOut(2000);
+          $('#activity_feed').append(`<p>${user_name} is now disconnected</p>`).hide().fadeIn(1000, function(){
+            $(this).fadeOut(1000);
           });
         })
       } 
@@ -152,7 +152,6 @@
     })
     
     socket.on('delete name', function(name, id){
-      $(`p[data-id=${id}]`).remove();
       userStatus(false, name);
     })
     socket.on('user connected', function(name){
@@ -161,9 +160,14 @@
     socket.on('remove track from playlist', function(track_id){
       $(`#tablePlaylist tr#${track_id}`).remove();
     })
+    socket.on('populate names', function(names){
+      $('#users').empty()
+      for(var i = 0; i < names.length; i++){
+        $('#users').append(`<p data-id=${names[i]["id"]}>${names[i]["name"]} </p>`)
+      }
+    })
 
     var counter = 1
-    var pictureQueue = []
 
     socket.on('picture upload', function(picture, filename, width, height){
       var posx = 0
