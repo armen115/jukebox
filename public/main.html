@@ -3,10 +3,11 @@
   <head>
   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="footable.core.min.css">
-
     <link rel="stylesheet" href="progress_bar.css">
+
     <script type="text/javascript" src="https://cdns-files.dzcdn.net/js/min/dz-v00350607.js"></script>
     <script type="text/javascript" src="dz.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
@@ -25,7 +26,7 @@
           <img src="" id="current_track_image">
         </div>
         <!-- displays the current track playing -->
-        <div id="currentTrackDiv"><h4 id="currentTrack"></h4></div>
+        <div id="currentTrackDiv"><h4 id="currentTrack" class="current_track_div"></h4></div>
 
         <!-- track progress bar -->
         <div id="slider_seek" class="progressbarplay" style="">
@@ -49,7 +50,7 @@
         </table>
         <hr>
         <!-- displays current users -->
-        <h6>Current users:</h6>
+        <h6 class="one_one_em">Current users:</h6>
         <div id="users">
           <p></p>
         </div> 
@@ -274,7 +275,7 @@
     }
 
     function displayCurrentTrack(track_title, artist) {
-      var current_track = `<h4 id="currentTrack">${track_title} <small>By ${artist}</small></h4>`
+      var current_track = `<h4 id="currentTrack" class="current_track_div">${track_title} <small>By ${artist}</small></h4>`
       $("#currentTrack").replaceWith(current_track);
     }
 

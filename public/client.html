@@ -3,6 +3,7 @@
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="client.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <script src='/socket.io/socket.io.js'></script>  
     <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -70,7 +71,7 @@
   </div>
 
   <hr>
-  <h5 class="text-center">Current users:</h5>
+  <h5 class="text-center one_one_em">Current users:</h5>
   <div id="users"></div>
 </body>
   <script>
@@ -103,7 +104,7 @@
                            <td class="track_info_voting">
                             <ul class="list-unstyled">
                               <div class="tr_title"><li class="text-left">${track_title}</li></div>
-                              <li class="ext-left"><small>${artist}</small></li>
+                              <li class="ext-left"><small class="one_one_em">${artist}</small></li>
                             </ul>
                            </td>
                            <td class="img_td_2">
