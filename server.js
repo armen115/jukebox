@@ -217,7 +217,6 @@ io.on('connection', function(socket){
 
 })
 
-// var networkInterfaces = os.networkInterfaces();
-// console.log("Connect to: " + networkInterfaces["wlan0"][0]["address"] + ":" + PORT + " to start adding songs!")
-
-http.listen(process.env.PORT);
+http.listen(process.env.PORT || PORT, function(){
+	console.log("Server running")
+});
