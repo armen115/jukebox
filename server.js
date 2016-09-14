@@ -6,6 +6,7 @@ var path = require('path')
 var fs = require("fs");
 var os = require( 'os' );
 var file = "hello.db";
+var PORT = 3000
 var exists = fs.existsSync(file);
 var sqlite3 = require('sqlite3').verbose();
 var sharp = require('sharp')
@@ -216,27 +217,9 @@ io.on('connection', function(socket){
 
 })
 
-
 var networkInterfaces = os.networkInterfaces();
-http.listen(3000, function(){
+console.log("Connect to: " + networkInterfaces["wlan0"][0]["address"] + ":" + PORT + " to start adding songs!")
+
+http.listen(PORT, function(){
 	console.log('Listening on port 3000')
 });
-
-
-
-
-// app.post('/uploads', function(req, res){
-// 	upload(req, res, function(err){
-// 		if (err){
-// 			return res.end('Error uploading file.')
-// 		}
-// 		res.sendStatus(200)
-// 		// console.log(req)
-// 		sharp(req["file"]["path"]).resize(300).toFile(`public/uploads/SMALL-${req["file"]["filename"]}`).then(function(){
-
-// 			pictureName = `SMALL-${req["file"]["filename"]}`
-// 			io.emit("picture upload", pictureName, req["file"]["filename"].replace(/\.[^/.]+$/, ""))
-			
-// 		})
-// 	})	
-// })
