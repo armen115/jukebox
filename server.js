@@ -217,11 +217,6 @@ io.on('connection', function(socket){
 
 })
 
-var networkInterfaces = os.networkInterfaces();
-// console.log("Connect to: " + networkInterfaces["eth0"][0]["address"] + ":" + PORT + " to start adding songs!")
-console.log(networkInterfaces[1]);
-// io.emit('welcome', null)
-
-http.listen(PORT, function(){
-	console.log('Listening on port 3000')
+http.listen(process.env.PORT || PORT, function(){
+	console.log("Server running")
 });
