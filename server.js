@@ -217,8 +217,8 @@ io.on('connection', function(socket){
 
 })
 
-var networkInterfaces = os.networkInterfaces();
-console.log("Connect to: " + networkInterfaces["wlan0"][0]["address"] + ":" + PORT + " to start adding songs!")
+// var networkInterfaces = os.networkInterfaces();
+// console.log("Connect to: " + networkInterfaces["wlan0"][0]["address"] + ":" + PORT + " to start adding songs!")
 
 http.listen(PORT, function(){
 	console.log('Listening on port 3000')
