@@ -271,6 +271,7 @@
 
     function loadTrackImage(track_image){
       $('.album_art > img').fadeOut(2000, function() {
+        $('.album_art > img').css("height", "200px");
         $("#current_track_image").attr('src', `${track_image}`).hide().fadeIn(2000);
       })
     }
@@ -284,7 +285,6 @@
       if ( !(isNaN(track_id)) ) {
         startPlayer(track_id, track_image, track_title, artist); 
       } else if (isNaN(track_id)) {
-        $("#mic").css("animation", "none");
         $("#slider_seek, #current_track_image").hide();
         $("#currentTrack").text("");
       }
@@ -293,7 +293,6 @@
     function startPlayer(track_id, track_image, track_title, artist){
       $('#slider_seek').show();
       $('#currentTrackDiv').show();
-      // $("#mic").css("animation", "growShake 1s infinite");
       $('#currentTrackDiv').css("animation", "growShake 1s infinite");
 
       DZ.player.playTracks([track_id], function(){
@@ -304,15 +303,18 @@
       });  
     }
 
-    function onPlayerLoaded() {
-      $("#mic").click(function(){
-        var start_track_title = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>div").text();
-        var start_artist = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>li").text();
-        var start_track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'));
-        var start_track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image');
+    function autoPlayOnLoad() {
+      var start_track_title = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>div").text();
+      var start_artist = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>li").text();
+      var start_track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'));
+      var start_track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image');
 
-        checkIfNextTrackEmpty(start_track_id, start_track_image, start_track_title, start_artist);       
-      })
+      checkIfNextTrackEmpty(start_track_id, start_track_image, start_track_title, start_artist); 
+    };
+
+    function onPlayerLoaded() {
+      autoPlayOnLoad();
+      
       DZ.Event.subscribe('track_end', function(){ 
         var track_title = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>div").text();
         var artist = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>li").text();

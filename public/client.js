@@ -94,7 +94,6 @@ $(document).ready(function() {
   }
 
   searchForTracks = function(){
-
     $("#tableSearchResults, #autocomplete, #search").show();
     $("#tablePlaylist").hide();
     $("#pictureDiv").hide()
@@ -126,6 +125,10 @@ $(document).ready(function() {
     });
   }
 
+  // updateDownVoteButtons = function() {
+    
+  // }
+
   $('#tablePlaylist').on('click', '.up', function(){
     var track_id = this.parentElement.parentElement.getAttribute('id');
     var track_name = $(`tr#${track_id} td:nth-child(1)>ul>div>li`).text();
@@ -147,6 +150,8 @@ $(document).ready(function() {
       this.disabled = true;
       this.children[0].className += " disabledButton";
     } else if (currentVotes == 0) {
+      // $(`#playlist>tr>td:nth-child(3)>button`).disabled = true
+      // $(`#playlist>tr>td:nth-child(3)>button`).class("addButtonImages");
       // this.disabled = true;
       // this.children[0].className += " disabledButton";
     }  
