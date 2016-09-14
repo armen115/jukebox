@@ -107,7 +107,7 @@ $(document).ready(function() {
 
       if(query.length > 0) {
         $.ajax({
-          url: `http://api.deezer.com/search/track?strict=on&q=${searchTrack}&limit=5&output=jsonp`,
+          url: `https://api.deezer.com/search/track?strict=on&q=${searchTrack}&limit=5&output=jsonp`,
           type: 'GET',
           dataType: "jsonp",
           success: function( response ) {
