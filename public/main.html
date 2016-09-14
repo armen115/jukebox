@@ -24,7 +24,7 @@
           <img src="" id="current_track_image">
         </div>
         <!-- displays the current track playing -->
-        <div id="currentTrackDiv"><span id="currentTrack"></span></div>
+        <div id="currentTrackDiv"><h4 id="currentTrack"></h4></div>
 
         <!-- track progress bar -->
         <div id="slider_seek" class="progressbarplay" style="">
@@ -65,6 +65,7 @@
     $(document).ready(function(){
       $('#slider_seek').hide();
       $('#currentTrackDiv').hide();
+      
       $.getJSON({
       url: '/songs',
         success: function(response){
@@ -116,6 +117,7 @@
         })
       }
     }
+
     function userStatus(status, user_name) {
       var user_name = user_name || "A user";
       if (status == true) {
@@ -137,25 +139,25 @@
 
     socket.on('broadcast track', function(user_name, track_id, track_name, artist, track_image){
       var row = `<tr data-track-image="${track_image}" id="${track_id}">
-                        <td class="track_image_main">
-                          <img class="addButtonImages" src="${track_image}"/>
-                        </td>
+                  <td class="track_image_main">
+                    <img class="addButtonImages" src="${track_image}"/>
+                  </td>
 
-                        <td class="track_info_main">
-                          <ul class="list-unstyled">
-                            <div class="tr_title_main"><h5><li class="text-left">${track_name}<h5></li></div>
-                            <li class="text-left"><h6>${artist}</h6></li>
-                          </ul>
-                        </td>
+                  <td class="track_info_main">
+                    <ul class="list-unstyled">
+                      <div class="tr_title_main"><h5><li class="text-left">${track_name}<h5></li></div>
+                      <li class="text-left"><h6>${artist}</h6></li>
+                    </ul>
+                  </td>
 
-                        <td class="tr_votes_main">
-                          <span class="label label_main label-success">0</span>
-                        </td>
-                       </tr>`;
+                  <td class="tr_votes_main">
+                    <span class="label label_main label-success">0</span>
+                  </td>
+                 </tr>`;
 
       $('#mainPlaylistRow').append(row)
-      addToActivityFeed('added', user_name, track_id, track_name, artist);
-      // checkIfPlaylistEmpty(track_id, track_image)
+      checkIfPlaylistEmpty(track_id, track_image, track_name, artist);
+      addToActivityFeed('added', user_name, track_id, track_name, artist); 
     });
    
     socket.on('increase votes', function(user_name, track_id, track_name, artist){
@@ -247,14 +249,14 @@
       DZ.player.seek((evt.offsetX/$(this).width()) * 100);
     });
 
-    // function checkIfPlaylistEmpty(track_id, track_image) {
-    //   var next_track_id = $("#mainPlaylist tbody tr:nth-child(2)")
-    //   var current_track = $("#currentTrack").text()
+    function checkIfPlaylistEmpty(track_id, track_image, track_name, artist) {
+      var playlist = $("#mainPlaylist>td")
+      var current_track = $("#currentTrack").text()
 
-    //   if ( (next_track_id.length == 0) && (current_track.length == 0) ) {
-    //     startPlayer(track_id, track_image); 
-    //   } 
-    // }
+      if ( (playlist.length == 0) && (current_track == "") ) {
+        startPlayer(track_id, track_image, track_name, artist); 
+      } 
+    }
 
     function loadTrackImage(track_image){
       $('.album_art > img').fadeOut(2000, function() {
@@ -262,43 +264,52 @@
       })
     }
 
-    function checkIfNextTrackEmpty(track_id, track_image){
+    function displayCurrentTrack(track_title, artist) {
+      var current_track = `<h4 id="currentTrack">${track_title} <small>By ${artist}</small></h4>`
+      $("#currentTrack").replaceWith(current_track);
+    }
+
+    function checkIfNextTrackEmpty(track_id, track_image, track_title, artist){
       if ( !(isNaN(track_id)) ) {
-        startPlayer(track_id, track_image); 
+        startPlayer(track_id, track_image, track_title, artist); 
       } else if (isNaN(track_id)) {
         $("#mic").css("animation", "none");
         $("#slider_seek, #current_track_image").hide();
-        $("#currentTrackDiv").hide();
+        $("#currentTrack").text("");
       }
     }
     
-    function startPlayer(track_id, track_image){
+    function startPlayer(track_id, track_image, track_title, artist){
       $('#slider_seek').show();
       $('#currentTrackDiv').show();
-      $("#mic").css("animation", "growShake 1s infinite");
-      $('#currentTrackDiv').css("animation", "pulse 1s infinite");
+      // $("#mic").css("animation", "growShake 1s infinite");
+      $('#currentTrackDiv').css("animation", "growShake 1s infinite");
 
       DZ.player.playTracks([track_id], function(){
         $(`#${track_id}`).remove();
         loadTrackImage(track_image);
+        displayCurrentTrack(track_title, artist);
         socket.emit('delete track', track_id)
       });  
     }
+
     function onPlayerLoaded() {
       $("#mic").click(function(){
+        var start_track_title = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>div").text();
+        var start_artist = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>li").text();
         var start_track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'));
-        var start_track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image')
-        checkIfNextTrackEmpty(start_track_id, start_track_image);       
+        var start_track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image');
+
+        checkIfNextTrackEmpty(start_track_id, start_track_image, start_track_title, start_artist);       
       })
       DZ.Event.subscribe('track_end', function(){ 
+        var track_title = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>div").text();
+        var artist = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>li").text();
         var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'))
         var track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image')
-        checkIfNextTrackEmpty(track_id, track_image)
+
+        checkIfNextTrackEmpty(track_id, track_image, track_title, artist)
       })   
-      DZ.Event.subscribe('current_track', function(track){
-        var current = `<h4 id="currentTrack">${track.track.title} <small>By ${track.track.artist.name}</small></h4>`
-        $("#currentTrack").replaceWith(current);
-      });
       DZ.Event.subscribe('player_position', function(arg){
         $("#slider_seek").find('.bar').css('width', (100*arg[0]/arg[1]) + '%');
       });
