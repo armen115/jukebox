@@ -67,7 +67,7 @@ $(document).ready(function() {
 
     var resultRow = `<tr id="${track.id}">
                        <td><img src="${track.album.cover_small}" class="img-responsive img-circle"></img></td>
-                       <td colspan="3">
+                       <td class="track_info_results" colspan="3">
                         <ul class="list-unstyled">
                           <div class="tr_title"><li class="text-left">${track.title_short}</li></div>
                           <li class="ext-left"><small>${artist}</small></li>
@@ -147,8 +147,8 @@ $(document).ready(function() {
       this.disabled = true;
       this.children[0].className += " disabledButton";
     } else if (currentVotes == 0) {
-      this.disabled = true;
-      this.children[0].className += " disabledButton";
+      // this.disabled = true;
+      // this.children[0].className += " disabledButton";
     }  
   });
 

@@ -107,7 +107,7 @@ hr {
 }
 
 #mainPlaylist {
-  display: block;
+  /*display: block;*/
   max-height: 400px;
   overflow-y: hidden;
 }

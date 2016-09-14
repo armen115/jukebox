@@ -1,70 +1,70 @@
 html, body {
-	background-color: #f7f7f9;
+  background-color: #f7f7f9;
 }
 
 audio {
-	width: 74%;
+  width: 74%;
 }
 
 .headline, #welcome_h1, label {
-	color: #737373;
+  color: #737373;
 }
 
 #picture_select_submit {
-	border: none;
-	padding: 12px;
-	width: 100px;
-	border-radius: 3px;
-	color: white;
-	background-color: #1abc9c;
+  border: none;
+  padding: 12px;
+  width: 100px;
+  border-radius: 3px;
+  color: white;
+  background-color: #1abc9c;
 }
 
 #picture_select_label {
-	margin-bottom: 18px;
+  margin-bottom: 18px;
 }
 
 #camera_icon {
-	height: 70px;
-	width: 70px;
+  height: 70px;
+  width: 70px;
 }
 
 #message_form {
-	display: none;
+  display: none;
 }
 
-#button-container {	
-	width: 60%;
-	margin: 0 auto;
-	float: none;
+#button-container { 
+  width: 60%;
+  margin: 0 auto;
+  float: none;
 }
 
 td {
-	/*width: 15%;*/
+  /*width: 15%;*/
   border: 0px;
 }
 
 #nickname {
-	margin: 0 auto;
-	width: 30%
+  margin: 0 auto;
+  width: 30%
 }
 
 .headline, #nickname_form, #users {
-	text-align: center;
+  text-align: center;
 }
 
 table {
-	width: 100%;
-	table-layout: fixed;
+  width: 100%;
+  table-layout: fixed;
 }
 
 #nickname_submit {
-	margin: 12px;
-	background-color: #1abc9c;
-	border: none;
+  margin: 12px;
+  background-color: #1abc9c;
+  border: none;
 }
 
 #users > p {
-	display: inline;
+  display: inline;
 }
 
 #audioplayer{
@@ -98,41 +98,41 @@ table {
 }
 
 #welcome_h1 {
-	text-align: center;
+  text-align: center;
 }
 
 #uploadForm {
-	margin-top: 30px;
+  margin-top: 30px;
 }
 
 #pictureDiv {
-	text-align: center;
+  text-align: center;
 }
 
 #picture_select_submit {
-	margin: 0 auto;
-	display: block;
+  margin: 0 auto;
+  display: block;
 }
 
 .table>thead>tr>th {
-	border-bottom: none;
+  border-bottom: none;
 }
 
 #mic {
-	display: block;
-	margin: 15px auto;
-	height: 100px;
-	width: 100px;
-	border-radius: 50%;
-	background-color: white;
-	border: 2px solid #aaa;
-	/*animation: growShake 1s infinite;*/
+  display: block;
+  margin: 15px auto;
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid #aaa;
+  /*animation: growShake 1s infinite;*/
 }
 
 #message {
   color: #8da4ff;
   font-weight: 600;
-	margin-top: 16px;
+  margin-top: 16px;
 }
 
 td.img_td {
@@ -236,4 +236,3 @@ tr {
   text-align: center;
   vertical-align: center;
 }*/
-
