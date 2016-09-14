@@ -201,6 +201,7 @@ $(document).ready(function() {
       messageBox.html("Please select a picture!");
       return false;
   }
+  $('#picture_select_submit').val("Uploading..")
     $.ajax({
       url: '/uploads',
       type: 'POST',
@@ -210,6 +211,7 @@ $(document).ready(function() {
       success: function(data){
         $('#message').empty()
         $('#message').append('Upload complete!')
+        $('#picture_select_submit').val("Upload")
       }
     });
  });

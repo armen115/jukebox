@@ -62,7 +62,7 @@ body {
   text-align: center;
   border: 1px solid #bbb;
   padding: 18px;
-  background-color: #fff4f4;
+  background-color: #f0f1ff;
   border-radius: 5%;
 }
 
@@ -83,6 +83,7 @@ hr {
 
 #users > p {
   display: inline;
+  font-size: 1.5em;
 }
 
 #dz-root {
@@ -99,6 +100,7 @@ hr {
   -moz-border-radius: 50%;*/
   margin-top: -50px;
   border: 10px solid #1abc9c;
+  display: none;
   /*8A0707*/
 }
 
@@ -107,7 +109,6 @@ hr {
 }
 
 #mainPlaylist {
-  display: block;
   max-height: 400px;
   overflow-y: hidden;
 }
@@ -131,8 +132,8 @@ hr {
 }
 
 .track_image_main > img {
-  height: 70px;
-  width: 70px;
+  height: 80px;
+  float: left;
 }
 
 .tr_title_main {
@@ -161,8 +162,17 @@ tr {
   display: none;
 }
 
-/*
+
 img {
-  width: 150px;
-  height: auto;
+  height: 150px;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd){
+  #f7f6ff
+}
+
+/*#main{
+#f0f1ff
 }*/
+
+

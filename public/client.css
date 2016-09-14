@@ -76,6 +76,7 @@ table {
 #pButton{
   height:40px;
   width: 40px;
+  vertical-align: middle;
   border: none;
   background-size: 50% 50%;
   background-repeat: no-repeat;
@@ -86,7 +87,6 @@ table {
 .play{
   width: 30px;
   height: 30px;
-  background-color: none;
   background: url('images/play.png');
 }
 
@@ -116,6 +116,10 @@ table {
 
 .table>thead>tr>th {
 	border-bottom: none;
+}
+
+#music {
+  display: none;
 }
 
 #mic {
@@ -164,7 +168,6 @@ td.button_td {
 .addButtonImages {
   width: 30px;
   height: 30px;
-  background-color: none;
   background-repeat: no-repeat;
 }
 
