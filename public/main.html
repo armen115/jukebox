@@ -3,8 +3,9 @@
   <head>
   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="footable.core.min.css">
+
     <link rel="stylesheet" href="progress_bar.css">
     <script type="text/javascript" src="https://cdns-files.dzcdn.net/js/min/dz-v00350607.js"></script>
     <script type="text/javascript" src="http://cdn-files.deezer.com/js/min/dz.js"></script>
@@ -34,7 +35,7 @@
         <div id="dz-root"></div>
         <div id="player" align="center"></div>
         <!-- playlist table -->
-        <table id="mainPlaylist" class="table table-striped col-sm-12" >
+        <table id="mainPlaylist" class="table table-striped col-sm-12" data-page-size="3" >
           <thead>
             <tr>
               <th class="track_image_main"></th>
@@ -44,6 +45,7 @@
           </thead>
           <tbody id="mainPlaylistRow">
           </tbody>
+          
         </table>
         <hr>
         <!-- displays current users -->
@@ -59,7 +61,7 @@
       <div id="section_right" class="col-sm-4"></div>
     </div> <!-- end row div -->
     <div id="bottom_section"></div>
-  </div> <!-- end wrapper div -->
+  </div> <!-- end wrapper div -->  
   <script>
     // Load all songs from database on page load and build initial table 
     $(document).ready(function(){
@@ -90,9 +92,13 @@
             $('#mainPlaylistRow').append(row)
           })
           sort.refresh()
+          $('#mainPlaylist').footable();
         }
       });
-    });
+
+  })
+
+
   </script>
     
   <script src='/socket.io/socket.io.js'></script> 
@@ -156,6 +162,7 @@
                  </tr>`;
 
       $('#mainPlaylistRow').append(row)
+      $('table').trigger('footable_redraw');
       checkIfPlaylistEmpty(track_id, track_image, track_name, artist);
       addToActivityFeed('added', user_name, track_id, track_name, artist); 
     });
@@ -195,7 +202,7 @@
 
     var counter = 1
 
-    socket.on('picture upload', function(picture, filename, width, height){
+    socket.on('picture upload', function(picture, filename, height, width){
       var posx = 0
       var posY = 0 
       function calcPosition() {
@@ -203,6 +210,8 @@
         var section = document.getElementById(`${filename}`).parentElement.getBoundingClientRect();
         posX = Math.floor(Math.random()*(section.width - width))
         posY = Math.floor(Math.random()*(row.height - height))
+        console.log("width " + width)
+        console.log("height:" + height)
       }
 
       if ( counter % 3 == 0 ) {
@@ -307,7 +316,7 @@
         var artist = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>li").text();
         var track_id = parseInt($("#mainPlaylist tbody tr:nth-child(1)").attr('id'))
         var track_image = $("#mainPlaylistRow tr:nth-child(1)").data('track-image')
-
+        $('table').trigger('footable_redraw');
         checkIfNextTrackEmpty(track_id, track_image, track_title, artist)
       })   
       DZ.Event.subscribe('player_position', function(arg){
@@ -323,5 +332,7 @@
       descending: true
     });
   </script>
+  <script src="footable.js"></script>
+  <script src="footable.paginate.js"></script>
   </body>
 </html>

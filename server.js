@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path = require('path')
 var fs = require("fs");
+var os = require( 'os' );
 var file = "hello.db";
 var exists = fs.existsSync(file);
 var sqlite3 = require('sqlite3').verbose();
@@ -215,6 +216,8 @@ io.on('connection', function(socket){
 
 })
 
+
+var networkInterfaces = os.networkInterfaces();
 http.listen(3000, function(){
 	console.log('Listening on port 3000')
 });
