@@ -64,7 +64,7 @@
 
         <!-- displays where clients can connect -->
         <div id="invite">
-          <p><h5>Connect @ <font color="#1abc9c">jukeberrypi.herokuapp.com</h5></font></p>
+          <h2>Connect @ jukeberrypi.herokuapp.com</h2>
         </div>
       </div><!-- end player container div -->
       <div id="section_right" class="col-sm-4"></div>
@@ -101,6 +101,7 @@
           })
           sort.refresh()
           $('#mainPlaylist').footable();
+          hideInitialMessage(response);
         }
       });
 
@@ -259,6 +260,18 @@
       DZ.player.seek((evt.offsetX/$(this).width()) * 100);
     });
 
+    function hideInitialMessage(response) {
+      // var playlist = $("#mainPlaylist>td")
+      // var current_track = $("#currentTrack").text()
+      console.log(response.length)
+      if (response.length == 0) {
+        $("#initial_message").show(); 
+      } else if (response.length > 0) {
+        $("#initial_message").hide(); 
+      }
+
+    }
+
     function checkIfPlaylistEmpty(track_id, track_image, track_name, artist) {
       var playlist = $("#mainPlaylist>td")
       var current_track = $("#currentTrack").text()
@@ -286,6 +299,7 @@
       } else if (isNaN(track_id)) {
         $("#slider_seek, #current_track_image").hide();
         $("#currentTrack").text("");
+        $("#initial_message").show();
       }
     }
     
@@ -314,6 +328,7 @@
     };
 
     function onPlayerLoaded() {
+      $("#initial_message").hide();
       autoPlayOnLoad();
       DZ.Event.subscribe('track_end', function(){ 
         var track_title = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>div").text();

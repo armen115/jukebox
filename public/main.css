@@ -13,7 +13,7 @@ li h6 {
 }
 
 p {
-  font-size: 1.8em;
+  font-size: 1.6em;
 }
 
 .one_one_em {
@@ -170,6 +170,10 @@ tr {
 #mainPlaylist>tr>th {
   display: none;
 }
+
+/*#invite>p {
+  font-size: 1.6em;
+}*/
 /*
 img {
   width: 150px;
