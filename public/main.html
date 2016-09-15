@@ -19,6 +19,9 @@
         <!-- mic -->
         <img id='mic' src='/images/setupPhoto-1473793237491.png'>
 
+        <div id="initial_message"> 
+          <h1>There are no songs in the playlist yet...</h1>
+        </div>
         <!-- album art slider here -->
         <div class="album_art">
           <img src="" id="current_track_image">
@@ -48,7 +51,7 @@
         </table>
         <hr>
         <!-- displays current users -->
-        <h6>Current users:</h6>
+        <h5>Connected users:</h5>
         <div id="users">
           <p></p>
         </div> 
@@ -56,6 +59,11 @@
         <hr>
         <!-- displays the activity feed -->
         <div id="activity_feed"><p></p></div>
+
+        <!-- displays where clients can connect -->
+        <div id="invite">
+          <p><h5>Connect @ <font color="#1abc9c">jukeberrypi.herokuapp.com</h5></font></p>
+        </div>
       </div><!-- end player container div -->
       <div id="section_right" class="col-sm-4"></div>
     </div> <!-- end row div -->
@@ -96,7 +104,6 @@
       });
 
   })
-
 
   </script>
     
@@ -263,7 +270,7 @@
     function checkIfPlaylistEmpty(track_id, track_image, track_name, artist) {
       var playlist = $("#mainPlaylist>td")
       var current_track = $("#currentTrack").text()
-
+      
       if ( (playlist.length == 0) && (current_track == "") ) {
         startPlayer(track_id, track_image, track_name, artist); 
       } 
@@ -291,6 +298,7 @@
     }
     
     function startPlayer(track_id, track_image, track_title, artist){
+      $("#initial_message").hide();
       $('#slider_seek').show();
       $('#currentTrackDiv').show();
       $('#currentTrackDiv').css("animation", "growShake 1s infinite");
@@ -314,7 +322,6 @@
 
     function onPlayerLoaded() {
       autoPlayOnLoad();
-      
       DZ.Event.subscribe('track_end', function(){ 
         var track_title = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>div").text();
         var artist = $("#mainPlaylist tbody tr:nth-child(1)>td:nth-child(2)>ul>li").text();
