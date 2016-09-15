@@ -61,7 +61,6 @@
       </div><!-- end player container div -->
       <div id="section_right" class="col-sm-4"></div>
     </div> <!-- end row div -->
-    <div id="bottom_section"></div>
   </div> <!-- end wrapper div -->  
   <script>
     // Load all songs from database on page load and build initial table 
@@ -218,7 +217,7 @@
         console.log("height:" + height)
       }
 
-      if ( counter % 3 == 0 ) {
+      if ( counter % 2 == 0 ) {
         $('#section_left').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
           $(this).delay(3200).fadeOut('slow')
         }));
@@ -226,7 +225,7 @@
         calcPosition();
         $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
       } 
-      else if ( counter % 2 == 0 ) {
+      else if ( counter % 1 == 0 ) {
         $('#section_right').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
           $(this).delay(3200).fadeOut('slow')
         }));
@@ -234,15 +233,6 @@
         calcPosition();
         $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
       } 
-      else if ( counter % 1 == 0 ) {
-        $('#bottom_section').empty().append($(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`).hide().fadeIn('slow', function(){
-          $(this).delay(3200).fadeOut('slow')
-        }));
-        $(`<img id="${filename}" class="user_pic" src="/uploads/${picture}">`)
-        calcPosition();
-        $(`#${filename}`).css({ 'position': 'absolute', 'left': posX, 'top': posY })
-      }
-
       counter++
     })
   

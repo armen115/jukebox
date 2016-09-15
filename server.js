@@ -54,7 +54,7 @@ app.post('/uploads', function(req, res){
 		}
 		res.sendStatus(200)
 		// console.log(req)
-		sharp(req["file"]["path"]).resize(300, 200).max().toFile(`public/uploads/SMALL-${req["file"]["filename"]}`).then(function(){
+		sharp(req["file"]["path"]).resize(350, 200).max().toFile(`public/uploads/SMALL-${req["file"]["filename"]}`).then(function(){
 
 			pictureName = `SMALL-${req["file"]["filename"]}`
 			sharp(`public/uploads/${pictureName}`).metadata(function(err, metadata){ 

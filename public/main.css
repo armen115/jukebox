@@ -13,18 +13,33 @@ li h6 {
 }
 
 p {
-  font-size: 1em;
+  font-size: 1.8em;
 }
 
 .one_one_em {
-  font-size: 105%;
+  font-size: 130%;
 }
 
-/*html {
+h4 small {
+  font-size: 90%;
+}
+
+.current_track_div {
+  margin: 20px;  
+  font-size: 135%;
+}
+
+html {
   height: 100%;
-  margin: 0;
-  padding: 0;
-}*/
+}
+
+#wrapper {
+  height: 100%;
+}
+
+.row {
+  height: 100%;
+}
 
 body { 
   background: url(/images/setupPhoto-1473793232871.jpeg) no-repeat center center fixed; 
@@ -36,9 +51,6 @@ body {
   margin: 0;
   padding: 0;
 }
-/*#wrapper {
-  width: 100%;
-}*/
 @keyframes growShake {
   from {
     transform: scale(1);
@@ -164,6 +176,4 @@ img {
   height: auto;
 }*/
 
-.current_track_div {
-  margin: 20px;  
-}
+
