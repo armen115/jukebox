@@ -302,6 +302,7 @@
         loadTrackImage(track_image);
         displayCurrentTrack(track_title, artist);
         socket.emit('delete track', track_id)
+        $('table').trigger('footable_redraw');
       });  
     }
 
