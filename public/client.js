@@ -45,6 +45,26 @@ $(document).ready(function() {
     } 
   }
 
+  // checkTrackNameExisting = function(track_title) {
+  //   $(`.track_info_voting>ul>div>li`).each(function(){ 
+  //     if ( $(this).contains(track_title).length > 0 ) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   })
+  // }
+
+  // checkArtistNameExisting = function(artist) {
+  //   $(`.track_info_voting>ul>li`).each(function(){ 
+  //     if ( $(this).contains(artist).length > 0 ) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   })
+  // }
+
   disableButton = function(e) {
     e.disabled = true;
     e.innerHTML =`<img class="addButtonImages disabledButton" src="images/success.png"/></button>`;
@@ -125,10 +145,6 @@ $(document).ready(function() {
     });
   }
 
-  // updateDownVoteButtons = function() {
-    
-  // }
-
   $('#tablePlaylist').on('click', '.up', function(){
     var track_id = this.parentElement.parentElement.getAttribute('id');
     var track_name = $(`tr#${track_id} td:nth-child(1)>ul>div>li`).text();
@@ -150,10 +166,12 @@ $(document).ready(function() {
       this.disabled = true;
       this.children[0].className += " disabledButton";
     } else if (currentVotes == 0) {
-      // $(`#playlist>tr>td:nth-child(3)>button`).disabled = true
-      // $(`#playlist>tr>td:nth-child(3)>button`).class("addButtonImages");
-      // this.disabled = true;
-      // this.children[0].className += " disabledButton";
+      var $this = this;
+      $this.children[0].className += " disabledButton";
+
+      setTimeout(function () { 
+        $this.children[0].classList.remove('disabledButton');
+      }, 100);
     }  
   });
 
