@@ -190,7 +190,7 @@
       var votes = Number(votes) - 1
       $(`#mainPlaylistRow>tr#${track_id}>td:nth-child(3)>span`).text(votes)
     })
-    socket.on('send names', function(name, id){
+    socket.on('send name', function(name, id){
       $('#users').append(`<p data-id=${id}>${name} </p>`)
       userStatus(true, name);
     })

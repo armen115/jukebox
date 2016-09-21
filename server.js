@@ -12,6 +12,7 @@ var sqlite3 = require('sqlite3').verbose();
 var sharp = require('sharp')
 var mime = require('mime')
 var multer = require('multer')
+
 var publicStorage = multer.diskStorage({
 	destination: function(req, file, callback){
 		callback(null, './public/uploads');
@@ -20,7 +21,9 @@ var publicStorage = multer.diskStorage({
 		callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype))
 	}
 })
+
 var publicUpload = multer({ storage: publicStorage },{limits: {}}).single('userPhoto')
+
 var setupStorage = multer.diskStorage({
 	destination: function(req, file, callback){
 		callback(null, './public/images');
@@ -29,9 +32,11 @@ var setupStorage = multer.diskStorage({
 		callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype))
 	}
 })
+
 var setupUpload = multer({ storage: setupStorage },{limits: {}}).single('setupPhoto')
 
 var db = new sqlite3.Database(file);
+
 db.serialize(function() {
   if(!exists) {
     db.run("CREATE TABLE songs (track_id STRING, track_name STRING, track_artist STRING, votes INTEGER, track_image STRING)");
@@ -122,7 +127,7 @@ app.post('/setupLogo', function(req, res){
 	})	
 })
 
-app.get('/admin', function(req, res){
+app.get('/main', function(req, res){
 	res.sendFile(__dirname + '/public/main.html')
 })
 
@@ -139,45 +144,51 @@ app.get('/setup', function(req, res){
 // Store objects of current users in this array
 currentUsers = []
 
+// displays the server status
+http.listen(process.env.PORT || PORT, function(){
+	console.log("Server running")
+});
+
 io.on('connection', function(socket){
-	console.log('A user has connected')
+  
+  console.log('A user has connected')
   io.emit('user connected', null)
   io.emit('populate names', currentUsers)
-	
-	function getUserInfo() {
-		var name, id;
-		for(var i = 0; i < currentUsers.length; i++ ) {
-			if (socket.id.replace('/#','') == currentUsers[i]['id']) {
-				name = currentUsers[i]['name'],
-				id = currentUsers[i]['id']
-			}
-		}
-		return {
-			name: name,
-			id: id
-		}
-	}
+  
+  function getUserInfo() {
+    var name, id;
+    for(var i = 0; i < currentUsers.length; i++ ) {
+      if (socket.id.replace('/#','') == currentUsers[i]['id']) {
+        name = currentUsers[i]['name'],
+        id = currentUsers[i]['id']
+      }
+    }
+    return {
+      name: name,
+      id: id
+    }
+  }
 
-	socket.on('disconnect', function(){
-		var user = getUserInfo();
-		for (var i = 0; i < currentUsers.length; i++){
-			if (currentUsers[i]["id"] == user.id){
-				currentUsers.splice(i, 1)
-			}
-		}
-		console.log(user.name + ' disconnected')
-		io.emit('populate names', currentUsers)
-		io.emit('delete name', user.name, user.id)
-	})
+  socket.on('disconnect', function(){
+    var user = getUserInfo();
+    for (var i = 0; i < currentUsers.length; i++){
+      if (currentUsers[i]["id"] == user.id){
+        currentUsers.splice(i, 1)
+      }
+    }
+    console.log(user.name + ' disconnected')
+    io.emit('populate names', currentUsers)
+    io.emit('delete name', user.name, user.id)
+  })
 
-	socket.on('name submit', function(name, id){
-		var obj = {	name: name,
-								id: id
-							}
-		currentUsers.push(obj)
-		console.log(name + ' has joined');
-		io.emit('send names', name, id)
-	})
+  socket.on('name submit', function(name, id){
+    var obj = { name: name,
+                id: id
+              }
+    currentUsers.push(obj)
+    console.log(name + ' has joined');
+    io.emit('send name', name, id)
+  })
 
   socket.on('add track', function(track_id, track_title, artist, track_image){
     db.run("INSERT INTO songs VALUES (?, ?, ?, ?, ?)", [track_id, track_title, artist, 0, track_image]);
@@ -195,28 +206,25 @@ io.on('connection', function(socket){
 
   socket.on('upvote', function(track_id, track_name, artist){
     db.run("UPDATE songs SET votes = votes + 1 WHERE track_id = ?", [track_id], function(err, res){
-    	if (err) {
-    		console.log('vote could not be processed')
-    	}
+      if (err) {
+        console.log('vote could not be processed')
+      }
     });
     var user = getUserInfo();
-  	io.emit('increase votes', user.name, track_id, track_name, artist)
+    io.emit('increase votes', user.name, track_id, track_name, artist)
   })
 
   socket.on('downvote', function(track_id, track_name, artist){
     console.log(track_id)
     db.run("UPDATE songs SET votes = votes - 1 WHERE track_id = ?", [track_id], function(err, res){
-	  	if (err){
-    		console.log('vote could not be processed')
-	  	}
-  	})
-  	var user = getUserInfo();
-  	console.log(user.name)
-  	io.emit('decrease votes', user.name, track_id, track_name, artist)
-	})
+      if (err){
+        console.log('vote could not be processed')
+      }
+    })
+    var user = getUserInfo();
+    console.log(user.name)
+    io.emit('decrease votes', user.name, track_id, track_name, artist)
+  })
 
 })
 
-http.listen(process.env.PORT || PORT, function(){
-	console.log("Server running")
-});
