@@ -33,7 +33,7 @@ $(document).ready(function() {
     }
   })
 
-  // displays the current tracks in the main playlist
+  // displays the current tracks in the voting table with a corresponding "thumbs-up" and "thumbs-down button"
   // activated on io.emit(broadcast track) from server.js
   socket.on('broadcast track', function(user_name, track_id, track_title, artist, track_image){
 
@@ -77,7 +77,7 @@ $(document).ready(function() {
   })
 
   // removes the track from the voting table as soon as the track 
-  // starts playing on  the main playlist
+  // starts playing on the main playlist
   // activated on io.emit(remove trackFromPlaylist) from the server.js
   socket.on('remove trackFromPlaylist', function(track_id){
     $(`#tablePlaylist tr#${track_id}`).remove();
