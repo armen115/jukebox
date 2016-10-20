@@ -4,7 +4,7 @@ $(document).ready(function() {
   $('#slider_seek').hide();
   $('#currentTrackDiv').hide();
      
-  // Load all songs from database on page load and build initial table 
+  // Load all song/s from database on page load and build initial table 
   // upon connection or refresh 
   $.getJSON({
     url: '/songs',
